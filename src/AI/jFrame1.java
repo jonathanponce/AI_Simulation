@@ -45,7 +45,7 @@ public class jFrame1 extends javax.swing.JFrame {
     
 
     public jFrame1() {
-        initComponents();
+        initComponents();/*
         canvas1 = new MyCanvas(jPanel1.getWidth(), jPanel1.getHeight(),100,100);
         canvas1.setSize(jPanel1.getWidth(), jPanel1.getHeight());
         jPanel1.add(canvas1);
@@ -65,8 +65,16 @@ public class jFrame1 extends javax.swing.JFrame {
             canvas1.setObjectInfo(tempx, tempy, "Test food info,Test food info2");
             canvas1.setTerrainInfo(tempx, tempy, "Test Terrain Info,Test Terrain info2");
             
-        }
+        }*/
 
+    }
+    
+    public MyCanvas getCanvas(){//else I cannot access it !!!
+        return canvas1;
+    }
+    
+    public JPanel getJPanel(){//else I cannot access it !!!
+        return jPanel1;
     }
 
     /**
@@ -235,7 +243,7 @@ public class jFrame1 extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void mainGUI(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
