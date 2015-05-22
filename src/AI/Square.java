@@ -16,6 +16,7 @@ public class Square {
     private int LVar[];
     
     private Element element;//TOCHANGE
+    
     private int x;
     private int y;
     

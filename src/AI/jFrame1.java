@@ -44,13 +44,13 @@ public class jFrame1 extends javax.swing.JFrame {
     
     
 
-    public jFrame1() {
-        initComponents();/*
-        canvas1 = new MyCanvas(jPanel1.getWidth(), jPanel1.getHeight(),100,100);
+    public jFrame1(int w,int h) {
+        initComponents();
+        canvas1 = new MyCanvas(jPanel1.getWidth(), jPanel1.getHeight(),w,h);
         canvas1.setSize(jPanel1.getWidth(), jPanel1.getHeight());
         jPanel1.add(canvas1);
         canvas1.setVisible(true);
-        Random r=new Random(System.currentTimeMillis());
+       /* Random r=new Random(System.currentTimeMillis());
         int tempx,tempy;
         for (int i = 0; i < 100; i++) {
             tempx=r.nextInt(100);
@@ -68,6 +68,7 @@ public class jFrame1 extends javax.swing.JFrame {
         }*/
 
     }
+    
     
     public MyCanvas getCanvas(){//else I cannot access it !!!
         return canvas1;
@@ -270,7 +271,7 @@ public class jFrame1 extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new jFrame1().setVisible(true);
+                new jFrame1(0,0).setVisible(true);
             }
         });
     }

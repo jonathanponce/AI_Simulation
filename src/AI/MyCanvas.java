@@ -64,6 +64,18 @@ class MyCanvas extends JPanel implements ActionListener {
         ycoord = hh;
     }
 
+    public String getObjectInfo(int x, int y) {
+        return objectInfo[x][y];
+    }
+
+    public String getTerrainInfo(int x, int y) {
+        return terrainInfo[x][y];
+    }
+
+    public int[][] getObjects() {
+        return objects;
+    }
+
     public MyCanvas(int width2, int height2, int sizex, int sizey) {
         //setBackground(Color.getHSBColor(0.3f, 0.4f, 0.6f));
         setBackground(Color.getHSBColor(0.0f, 0.0f, 0.0f));
@@ -152,6 +164,10 @@ class MyCanvas extends JPanel implements ActionListener {
                         case 2:
                             g2.fill(new Arc2D.Double(tempX, tempY, size/2, size/2, 0, 360, Arc2D.PIE));
                             g2.fill(new Arc2D.Double(tempX+size/2, tempY+size/2, size/2, size/2, 0, 360, Arc2D.PIE));
+                            break;
+                        case 3:
+                            
+                            g2.fillRect(tempX, tempY, size/2,size/2);
                             break;
                         
                     }
@@ -256,6 +272,17 @@ class MyCanvas extends JPanel implements ActionListener {
         }
         totalWidth = x * size;
             totalHeight = y * size;
+    }
+    public void emptyElements(){
+        for (int i = 0; i < x; i++) {
+            for (int j = 0; j < y; j++) {
+                
+            objectInfo[i][j]="";
+            terrainInfo[i][j]="";
+            objects[i][j]=0;
+            }
+        }
+    
     }
 
 }
