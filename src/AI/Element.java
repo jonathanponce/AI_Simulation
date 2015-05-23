@@ -10,5 +10,6 @@ package AI;
  * @author Vaferdolosa
  */
 public abstract class Element {
+    public abstract String getName();
     public abstract boolean isAgent();
 }

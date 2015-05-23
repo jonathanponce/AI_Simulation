@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -24,6 +26,27 @@ public class Agent extends Element {
     private int bestx, besty;
     private int posx,posy;
 
+    public int getPosx() {
+        return posx;
+    }
+
+    public void setPosx(int posx) {
+        this.posx = posx;
+    }
+
+    public int getPosy() {
+        return posy;
+    }
+
+    public void setPosy(int posy) {
+        this.posy = posy;
+    }
+    
+    public void moveTo(int xNew, int yNew) {
+        setPosx(xNew);
+        setPosy(yNew);
+    }
+
     public Agent(World w,int x,int y) {
         organs=new ArrayList<Organ>();
         characteristics=new HashMap<String, Integer>() ;
@@ -35,21 +58,46 @@ public class Agent extends Element {
     public boolean isAgent() {
         return true;
     }
+    public String getName() {
+        return "agent";
+    }
 
     public void act() {
 
-        chooseAction();
-        //modify the world accordingly
+        Action toDo= chooseAction();
+        if (toDo != null){
+            toDo.getAct().compute(world, posx, posy, bestx, besty);
+        }
+        //Consume fat.
+        if (characteristics.containsKey("fat")){
+            characteristics.replace("fat", characteristics.get("fat"), characteristics.get("fat")-1);
+            //System.out.println(characteristics.get("fat"));
+            if (characteristics.get("fat")<0){
+                world.removeElement(posx, posy);
+            }
+        }
     }
 
-    private void addCharacteristic(String name, int value) {
-
+    public void addCharacteristic(String name, int value) {
         characteristics.put(name, value);
-
+    }
+    
+    public int getCharacteristic(String name){
+        return characteristics.containsKey(name)? characteristics.get(name) : -1;
+    }
+    
+    public void setCharacteristic(String name, int value){
+        /* it the characteristic already exists, it modify it.
+         * else it adds a new one with the value.
+        */
+        if (characteristics.containsKey(name)) {
+            characteristics.replace(name, characteristics.get(name), value);
+        } else {
+            addCharacteristic(name, value);
+        }     
     }
 
     public void addOrgan(Organ o) {
-
         organs.add(o);
     }
 
@@ -83,53 +131,61 @@ public class Agent extends Element {
     }
 
     public int evaluationFunction(int x, int y, Action a) {
-        String terrInfo = world.getTerrainInfo(x, y);
-        String objInfo = world.getObjectInfo(x, y);
-        int flag = 0;
+        
+        // We first verify that this action is possible on this square.
         Iterator it = a.getCondition().entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry) it.next();
+            // if the condition is about a max distance (e.g. movement)
             if(pair.getKey().equals("Distance")){
-                if(((Integer[])(pair.getValue()))[0]<Math.abs(x-posx)+Math.abs(y-posy)){
+                if(((Integer[])(pair.getValue()))[0]>=Math.abs(x-posx)+Math.abs(y-posy)){
                     continue;
                 }else{
-                return 0;
+                    return -1;
                 }
             }
-            for (int j = 0; j < terrInfo.split("\n").length; j++) {
-                if (terrInfo.split("\n")[j].split(":")[0].equals(pair.getKey()) ) {
-                    if(Integer.parseInt(terrInfo.split("\n")[j].split(":")[1])>=((Integer[])pair.getValue())[0] && Integer.parseInt(terrInfo.split("\n")[j].split(":")[1])<=((Integer[])pair.getValue())[1]){
-                    flag = 1;
-                    break;
-                    }else{
-                        return 0;
+            // For the conditions on the terrain (e.g. max temperature).
+            if (((Integer[])(pair.getValue())).length==2){
+                try {
+                    if (world.getVariable((String) pair.getKey(), x, y)>=((Integer[])pair.getValue())[0] &&
+                            world.getVariable((String) pair.getKey(), x, y)<=((Integer[])pair.getValue())[1]){
+                        continue;
+                    } else {
+                        return -1;
                     }
+                } catch (Exception ex) {
+                    Logger.getLogger(Agent.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            if(flag==1){
-                flag=0;
-                continue;
-            }
-            for (int j = 0; j < objInfo.split("\n").length; j++) {
-                if (objInfo.split("\n")[j].split(":")[0].equals(pair.getKey()) ) {
-                    if(Integer.parseInt(objInfo.split("\n")[j].split(":")[1])>=((Integer[])pair.getValue())[0] && Integer.parseInt(objInfo.split("\n")[j].split(":")[1])<=((Integer[])pair.getValue())[1]){
-                    flag = 1;
-                    break;
-                    }else{
-                        return 0;
+            
+            // For the condition about an object on this square (e.g. eat).
+            if (((Integer[])(pair.getValue())).length==1){
+                try {
+                    if (((Integer[])pair.getValue())[0]==1) {
+                        if (world.getElement(x, y)!=null && world.getElement(x, y).getName().equals(pair.getKey())) {
+                            continue;
+                        } else {
+                            return -1;
+                        }
+                    } else { // we have: ((Integer[])pair.getValue())[0]==0
+                        if (world.getElement(x, y)!=null && world.getElement(x, y).getName().equals(pair.getKey())) {
+                            return -1;
+                        } else {
+                            continue;
+                        }
                     }
+                } catch (Exception ex) {
+                    Logger.getLogger(Agent.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            if(flag==1){
-                flag=0;
-                
-                continue;
-            }
+  
             //System.out.println(pair.getKey() + " = " + pair.getValue());
             it.remove(); // avoids a ConcurrentModificationException
-            return 0;
+            return -1;
         }
 
-        return 0;
+        //Now we evaluate the action.
+        
+        return a.evaluateAct().compute(world, posx, posy, x, y);
     }
 }

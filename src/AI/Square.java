@@ -26,6 +26,7 @@ public class Square {
         LTVar = new int[world.getLTVariableNumber()];
         LVar = new int[world.getLVariableNumber()];
         this.world = world;
+        element = null;
     }
     
     public void setElement(Element object){

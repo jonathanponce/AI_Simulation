@@ -173,7 +173,15 @@ public class World {
     public boolean isTimeless(String variable) {
         return LVarName.containsKey(variable);
     }
-
+    
+    public int getVariable(String name, int x, int y) throws Exception {
+        return grid[x][y].getVariable(name);
+    }
+    
+    public Element getElement(int x, int y) throws Exception {
+        return grid[x][y].getElement();
+    }
+    
     public int getLTVariableNumber() {
         return LTVarName.size();
     }
@@ -305,7 +313,7 @@ public class World {
             next();
             draw();
 
-            Thread.sleep(300);
+            Thread.sleep(1000);
         }
     }
 

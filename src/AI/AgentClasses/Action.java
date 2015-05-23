@@ -18,19 +18,21 @@ public class Action {
 
     private String name;
     private HashMap<String, Integer[]> condition;
-    
     private Main.Actionfunction act;
+    private Main.Evaluatefunction eva;
 
-    public Action(String n, Main.Actionfunction a, HashMap<String, Integer[]> c){
+    public Action(String n, Main.Actionfunction a, Main.Evaluatefunction e, HashMap<String, Integer[]> c){
         name=n;
         condition=c;
         act=a;
+        eva=e;
     }
     
-    public Action(String n, Main.Actionfunction a){
+    public Action(String n, Main.Actionfunction a, Main.Evaluatefunction e){
         name=n;
         condition= new HashMap<String, Integer[]>();
         act=a;
+        eva=e;
     }
     
     public String getName() {
@@ -43,6 +45,14 @@ public class Action {
 
     public Main.Actionfunction getAct() {
         return act;
+    }
+    
+    public Main.Evaluatefunction evaluateAct() {
+        return eva;
+    }
+    
+    public void addCondition(String s, Integer[] i){
+        condition.put(s, i);
     }
 
 }
