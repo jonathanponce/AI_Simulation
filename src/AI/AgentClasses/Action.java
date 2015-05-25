@@ -28,6 +28,6 @@ public abstract class Action {
 
     public abstract String getName();
     public abstract int getAct(World world, int x,int y, int xnext, int ynext);
-    public abstract int evaluateAct(World world, int x,int y, int xnext, int ynext);
+    public abstract int evaluateAct(World world, int x,int y, int xnext, int ynext) throws Exception ;
     
 }

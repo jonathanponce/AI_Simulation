@@ -25,6 +25,7 @@ public class Agent extends Element {
     private World world;
     private int bestx, besty;
     private int posx,posy;
+    
 
     public int getPosx() {
         return posx;

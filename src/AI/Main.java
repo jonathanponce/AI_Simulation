@@ -53,7 +53,7 @@ public class Main {
         World w = new World(10,10);
         
         w.addVariable("Friction", 1);
-        w.addVariable("tilt", (World world,int x,int y)->{return x+y;});
+        w.addVariable("slope", (World world,int x,int y)->{return x+y;});
         w.addVariable("temperature",(World world,long t)->{return (int)(20+10*(Math.sin(t)));});
         w.addVariable("light",(World world,int x,int y,long t)->{return (int)(((x+y>5+5*Math.cos(t))? 1 : 0)*(50-50*(Math.cos(t))));});
         
@@ -84,9 +84,11 @@ public class Main {
         Agent agent1=new Agent(w,1,1);
         //System.out.println(agent1.isAgent());
         agent1.addCharacteristic("fat", 1);
+        agent1.addCharacteristic("lifePoints", 10);
         w.setElement(agent1, 1, 1);
         Agent agent2=new Agent(w,2,2);
         agent2.addCharacteristic("fat", 20);
+        agent1.addCharacteristic("lifePoints", 10);
         agent2.addOrgan(foot);
         agent2.addOrgan(mouth);
         w.setElement(agent2, 2, 2);
