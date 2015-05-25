@@ -66,7 +66,7 @@ public class Agent extends Element {
 
         Action toDo= chooseAction();
         if (toDo != null){
-            toDo.getAct().compute(world, posx, posy, bestx, besty);
+            toDo.getAct(world, posx, posy, bestx, besty);
         }
         //Consume fat.
         if (characteristics.containsKey("fat")){
@@ -186,6 +186,6 @@ public class Agent extends Element {
 
         //Now we evaluate the action.
         
-        return a.evaluateAct().compute(world, posx, posy, x, y);
+        return a.evaluateAct(world, posx, posy, x, y);
     }
 }

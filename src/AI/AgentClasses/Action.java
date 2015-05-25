@@ -14,45 +14,20 @@ import java.util.HashMap;
  *
  * @author jonathan
  */
-public class Action {
+public abstract class Action {
 
-    private String name;
-    private HashMap<String, Integer[]> condition;
-    private Main.Actionfunction act;
-    private Main.Evaluatefunction eva;
-
-    public Action(String n, Main.Actionfunction a, Main.Evaluatefunction e, HashMap<String, Integer[]> c){
-        name=n;
-        condition=c;
-        act=a;
-        eva=e;
-    }
+    private HashMap<String, Integer[]> condition= new HashMap<String, Integer[]>();
     
-    public Action(String n, Main.Actionfunction a, Main.Evaluatefunction e){
-        name=n;
-        condition= new HashMap<String, Integer[]>();
-        act=a;
-        eva=e;
-    }
-    
-    public String getName() {
-        return name;
-    }
-
     public HashMap<String, Integer[]> getCondition() {
         return condition;
-    }
-
-    public Main.Actionfunction getAct() {
-        return act;
-    }
-    
-    public Main.Evaluatefunction evaluateAct() {
-        return eva;
     }
     
     public void addCondition(String s, Integer[] i){
         condition.put(s, i);
     }
 
+    public abstract String getName();
+    public abstract int getAct(World world, int x,int y, int xnext, int ynext);
+    public abstract int evaluateAct(World world, int x,int y, int xnext, int ynext);
+    
 }
