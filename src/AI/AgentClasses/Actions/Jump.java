@@ -23,7 +23,7 @@ public class Jump extends Action {
     }
 
     @Override
-    public int getAct(World world, int x, int y, int xnext, int ynext) {
+    public int doAction(World world, int x, int y, int xnext, int ynext) {
         
         try {
             Element thisElement = world.getElement(x, y);
@@ -43,7 +43,7 @@ public class Jump extends Action {
     }
 
     @Override
-    public int evaluateAct(World world, int x, int y, int xnext, int ynext) {
+    public int evaluateAction(World world, int x, int y, int xnext, int ynext) {
         return Math.abs(ynext-y) + Math.abs(xnext-x); // manhattan distance
     }
     

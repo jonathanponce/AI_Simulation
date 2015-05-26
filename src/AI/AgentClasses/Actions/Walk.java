@@ -24,7 +24,7 @@ public class Walk extends Action {
     }
 
     @Override
-    public int getAct(World world, int x, int y, int xnext, int ynext) {
+    public int doAction(World world, int x, int y, int xnext, int ynext) {
         try {
             Element thisElement = world.getElement(x, y);
             if (thisElement == null) {
@@ -43,7 +43,7 @@ public class Walk extends Action {
     }
 
     @Override
-    public int evaluateAct(World world, int x, int y, int xnext, int ynext) {
+    public int evaluateAction(World world, int x, int y, int xnext, int ynext) {
         int res = 0;
         int xresult, yresult;
         for (int i = -1; i < 2; i++) {

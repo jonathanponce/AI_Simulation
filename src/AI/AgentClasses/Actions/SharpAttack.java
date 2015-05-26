@@ -27,7 +27,7 @@ public class SharpAttack extends Action{
     }
 
     @Override
-    public int getAct(World world, int x, int y, int xnext, int ynext) {
+    public int doAction(World world, int x, int y, int xnext, int ynext) {
         // TODO: add defense mechanisms ex. if theres a shell, no points are taken from the attacked agent
         try {
             Element attacked = world.getElement(xnext, ynext);
@@ -47,7 +47,7 @@ public class SharpAttack extends Action{
     }
 
     @Override
-    public int evaluateAct(World world, int x, int y, int xnext, int ynext) {
+    public int evaluateAction(World world, int x, int y, int xnext, int ynext) {
         return damage; // TODO : EVALUATE WITH DEFENSE
     }
     

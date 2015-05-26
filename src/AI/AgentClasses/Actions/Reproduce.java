@@ -20,8 +20,9 @@ public class Reproduce extends Action {
     }
 
     @Override
-    public int getAct(World world, int x, int y, int xnext, int ynext) {
+    public int doAction(World world, int x, int y, int xnext, int ynext) {
         // We first have to choose an empty space for the child.
+        
         
         // then we have to create the child.
         
@@ -31,7 +32,7 @@ public class Reproduce extends Action {
     }
 
     @Override
-    public int evaluateAct(World world, int x, int y, int xnext, int ynext) {
+    public int evaluateAction(World world, int x, int y, int xnext, int ynext) {
         // The evaluation is an arbitrary value for now.
         return 150;
     }

@@ -26,7 +26,7 @@ public class Eject extends Action{
     }
 
     @Override
-    public int getAct(World world, int x, int y, int xnext, int ynext) {
+    public int doAction(World world, int x, int y, int xnext, int ynext) {
         try {
             Square target = world.getSquare(xnext, ynext);
             if (target == null) {
@@ -51,7 +51,7 @@ public class Eject extends Action{
     }
 
     @Override
-    public int evaluateAct(World world, int x, int y, int xnext, int ynext) {
+    public int evaluateAction(World world, int x, int y, int xnext, int ynext) {
         int nbOfAgents = 0;
          for (int i=-(this.actionRadius); i < this.actionRadius; i++) {
                     for (int j = -(this.actionRadius); j < this.actionRadius; j++) {

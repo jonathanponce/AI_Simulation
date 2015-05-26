@@ -25,7 +25,7 @@ public class Eat extends Action {
     }
 
     @Override
-    public int getAct(World world, int x, int y, int xnext, int ynext) {
+    public int doAction(World world, int x, int y, int xnext, int ynext) {
         try {
             if (world.getElement(xnext, ynext) != null && world.getElement(xnext, ynext).getName().equals("food")) {
                 world.removeElement(xnext, ynext);
@@ -40,7 +40,7 @@ public class Eat extends Action {
     }
 
     @Override
-    public int evaluateAct(World world, int x, int y, int xnext, int ynext) {
+    public int evaluateAction(World world, int x, int y, int xnext, int ynext) {
         return 99;
     }
     

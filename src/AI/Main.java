@@ -7,6 +7,7 @@ package AI;
 
 import AI.AgentClasses.*;
 import AI.AgentClasses.Actions.*;
+import AI.AgentClasses.Organs.*;
 
 import java.lang.*;
 import java.util.HashMap;
@@ -63,40 +64,30 @@ public class Main {
         //w.addRule((World world,int x,int y, long t)->{world.removeElement((int)t%10, (int)t/10);return 0;});
         
         w.buildWorld();  
-        
-        Walk walk= new Walk();
-        Integer temp[] = {2};
-        walk.addCondition("Distance", temp);
-        Integer temp2[] = {0};
-        walk.addCondition("food", temp2);
-        walk.addCondition("agent", temp2);
-        
-        Organ foot= new Organ("foot", walk);
-        
-        Eat eat= new Eat();
-        Integer temp3[]={1};
-        eat.addCondition("food", temp3);
-        eat.addCondition("Distance", temp3);
-        Organ mouth= new Organ("mouth", eat);
+
+
        
+        Agent.addCharacteristic("fat");
+        Agent.addCharacteristic("lifePoints");
         
         //w.setElement(new Agent(w,3,3), 3, 3);
         Agent agent1=new Agent(w,1,1);
         //System.out.println(agent1.isAgent());
-        agent1.addCharacteristic("fat", 1);
-        agent1.addCharacteristic("lifePoints", 10);
+        agent1.setCharacteristic("fat", 1);
+        agent1.setCharacteristic("lifePoints", 10);
         w.setElement(agent1, 1, 1);
+        
         Agent agent2=new Agent(w,2,2);
-        agent2.addCharacteristic("fat", 20);
-        agent1.addCharacteristic("lifePoints", 10);
-        agent2.addOrgan(foot);
-        agent2.addOrgan(mouth);
+        agent2.setCharacteristic("fat", 20);
+        agent1.setCharacteristic("lifePoints", 10);
+        agent2.addOrgan(new Foot(2));
+        agent2.addOrgan(new Mouth());
         w.setElement(agent2, 2, 2);
         
         w.setElement(new Food(), 4, 4);
         w.setElement(new Food(), 4, 5);
         w.setElement(new Food(), 4, 6);
-        
+        w.setElement(new Food(), 9, 9);
               
         w.run();        
         

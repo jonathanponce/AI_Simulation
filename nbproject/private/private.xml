@@ -9,6 +9,9 @@
             <file>file:/Users/matthieugallet/Desktop/AI_Simulation/src/AI/jFrame1.java</file>
             <file>file:/Users/matthieugallet/Desktop/AI_Simulation/src/AI/AgentClasses/Agent.java</file>
             <file>file:/Users/matthieugallet/Desktop/AI_Simulation/src/AI/AgentClasses/Action.java</file>
+            <file>file:/Users/matthieugallet/Desktop/AI_Simulation/src/AI/AgentClasses/Actions/Reproduce.java</file>
+            <file>file:/Users/matthieugallet/Desktop/AI_Simulation/src/AI/AgentClasses/Actions/Walk.java</file>
+            <file>file:/Users/matthieugallet/Desktop/AI_Simulation/src/AI/AgentClasses/Actions/Eat.java</file>
         </group>
     </open-files>
 </project-private>

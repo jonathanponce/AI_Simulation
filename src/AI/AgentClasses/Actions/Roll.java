@@ -22,7 +22,7 @@ public class Roll extends Action {
     }
 
     @Override
-    public int getAct(World world, int x, int y, int xnext, int ynext) {
+    public int doAction(World world, int x, int y, int xnext, int ynext) {
         try {
             Element thisElement = world.getElement(x, y);
             if (thisElement == null) {
@@ -41,7 +41,7 @@ public class Roll extends Action {
     }
 
     @Override
-    public int evaluateAct(World world, int x, int y, int xnext, int ynext) throws Exception {
+    public int evaluateAction(World world, int x, int y, int xnext, int ynext) throws Exception {
         int dx = Math.abs(xnext - x);
         int dy = Math.abs(ynext -y);
         int X = x;
