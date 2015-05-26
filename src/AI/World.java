@@ -189,6 +189,27 @@ public class World {
     public int getLVariableNumber() {
         return LVarName.size();
     }
+    
+    public void setFixedLTVar(int index, int x, int y, int delay){
+        Square s = getSquare(x, y);
+        s.setLTFixed(index,delay);
+    }
+    
+    public void setFixedLTVar(int index, int x, int y){
+        Square s = getSquare(x, y);
+        s.setLTFixed(index);
+    }
+    
+    public void setUnfixedLTVar(int index, int x, int y){
+        Square s = getSquare(x, y);
+        s.setLTUnfixed(index);
+    }
+    
+    public void setLTVarValue(int index, int x, int y, int value){
+        Square s = getSquare(x, y);
+        s.setLTValue(index,value);
+    }
+    
 
     private void addAgent(Agent agent) {
         this.agent.add(agent);
@@ -352,7 +373,7 @@ public class World {
         //jpanel.add(canvas);
 
         //canvas.setVisible(true);
-        canvas.emptyElements();
+        //canvas.emptyElements();
         for (int x = 0; x < size[0]; x++) {
             for (int y = 0; y < size[1]; y++) {
                 Square s = grid[x][y];
@@ -360,9 +381,12 @@ public class World {
                     if (s.getElement().isAgent()) {
                         canvas.setObject(x, y, 100, 100, 100, 3);
                     } else {
-                        canvas.setObject(x, y, 100, 100, 100, 1);//TODO color attribute for Element
+                        canvas.setObject(x, y, 200, 100, 100, 1);//TODO color attribute for Element
                     }
                     //setObjectInfo(int posx, int posy, String info) TODO no info for now
+                }
+                else{
+                    canvas.setObject(x, y, 100, 100, 100, 0);//TODO color attribute for Element
                 }
                 String txt = "";
                 for (String i : LTVarName.keySet()) {

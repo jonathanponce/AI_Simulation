@@ -72,7 +72,7 @@ public class Agent extends Element {
         return "agent";
     }
 
-    public void act() {
+    public void act() throws Exception {
 
         Action toDo= chooseAction();
         if (toDo != null){
@@ -111,7 +111,7 @@ public class Agent extends Element {
         organs.add(o);
     }
 
-    public Action chooseAction() {
+    public Action chooseAction() throws Exception {
         //choose what to do buttttt 
 
         Action best = null;
@@ -140,7 +140,7 @@ public class Agent extends Element {
         return best;
     }
 
-    public int evaluationFunction(int x, int y, Action a) {
+    public int evaluationFunction(int x, int y, Action a) throws Exception {
         
         try {
             // We first verify that this action is possible on this square.
