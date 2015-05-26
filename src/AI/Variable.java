@@ -6,6 +6,9 @@
 package AI;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
 /**
  *
@@ -20,6 +23,7 @@ public class Variable {
     private boolean global = false;
     private boolean timeless = false;
     private boolean fixed = false;
+    private int cooldown=0;
     
     public int value;
     
@@ -67,12 +71,47 @@ public class Variable {
         fixed = true;
     }
     
+    public void setFixed(int x, int y, int delay) throws Exception{
+        Square s = world.getSquare(x, y);
+        s.setLTFixed(world.getVariableIndex(name),delay);
+    }
+    
+    public void setFixed(int x, int y) throws Exception{
+        Square s = world.getSquare(x, y);
+        s.setLTFixed(world.getVariableIndex(name));
+    }
+    
+    public void setUnfixed(int index, int x, int y){
+        Square s = world.getSquare(x, y);
+        s.setLTUnfixed(index);
+    }
+    
+    
+    public void setFixed(int delay){
+        cooldown = delay;
+        fixed = true;
+    }
+    
+    public boolean isFixed(){
+        
+        if(cooldown!=0){
+            cooldown--;
+            if(cooldown==0){
+                fixed = false;
+            }
+        }
+        
+        
+        return fixed;
+    }
+    
     public void setUnfixed(){
+        cooldown = 0;
         fixed = false;
     }
     
     public int Update(int x, int y, long t){
-        if(fixed){
+        if(isFixed()){
             return value;
         }
         else{
@@ -81,7 +120,7 @@ public class Variable {
     }
     
     public int Update(int x, int y) throws Exception{
-        if(fixed){
+        if(isFixed()){
             return value;
         }
         else{
@@ -95,7 +134,7 @@ public class Variable {
     }
     
     public int Update(long t) throws Exception{
-        if(fixed){
+        if(isFixed()){
             return value;
         }
         else{
@@ -109,7 +148,7 @@ public class Variable {
     }
     
     public int Update() throws Exception{
-        if(fixed){
+        if(isFixed()){
             return value;
         }
         else{
