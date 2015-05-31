@@ -12,17 +12,28 @@ import java.util.HashMap;
  *
  * @author jonathan
  */
-public abstract class  Organ {
-    
+public class Organ {
+    private String organName;
     private ArrayList<Action> actions;
     private HashMap<String, Integer> characteristics;
-    
-    public Organ() {
+    public Organ(String n,Action a){
+        organName=n;
+        actions=new ArrayList();
+        characteristics= new HashMap<String, Integer>();
+        actions.add(a);
+    }
+    public Organ(String n){
+        organName=n;
         actions=new ArrayList();
         characteristics= new HashMap<String, Integer>();
     };
 
-    public abstract String getOrganName();
+    public String getOrganName(){
+        return organName;
+    }
+    public void setOrganName(String organName) {
+        this.organName = organName;
+    }
 
     public ArrayList<Action> getActions() {
         return actions;
@@ -32,15 +43,15 @@ public abstract class  Organ {
         this.actions.add(a);
     }
     
-    protected void addCharacteristic(String name, int value){
+    public void addCharacteristic(String name, int value){
         characteristics.put(name, value);
     }
     
-    protected int getCharacteristic(String name){
+    public int getCharacteristic(String name){
         return characteristics.containsKey(name)? characteristics.get(name) : -1;
     }
     
-    protected void setCharacteristic(String name, int value){
+    public void setCharacteristic(String name, int value){
         /* it the characteristic already exists, it modify it.
          * else it adds a new one with the value.
         */

@@ -7,9 +7,8 @@
             <file>file:/Users/matthieugallet/Desktop/AI_Simulation/src/AI/Main.java</file>
             <file>file:/Users/matthieugallet/Desktop/AI_Simulation/src/AI/AgentClasses/Organ.java</file>
             <file>file:/Users/matthieugallet/Desktop/AI_Simulation/src/AI/AgentClasses/Actions/Jump.java</file>
-            <file>file:/Users/matthieugallet/Desktop/AI_Simulation/src/AI/AgentClasses/Organs/Mouth.java</file>
             <file>file:/Users/matthieugallet/Desktop/AI_Simulation/src/AI/Square.java</file>
-            <file>file:/Users/matthieugallet/Desktop/AI_Simulation/src/AI/AgentClasses/Organs/Foot.java</file>
+            <file>file:/Users/matthieugallet/Desktop/AI_Simulation/src/AI/AgentClasses/Actions/SharpAttack.java</file>
             <file>file:/Users/matthieugallet/Desktop/AI_Simulation/src/AI/AgentClasses/Action.java</file>
             <file>file:/Users/matthieugallet/Desktop/AI_Simulation/src/AI/AgentClasses/Agent.java</file>
             <file>file:/Users/matthieugallet/Desktop/AI_Simulation/src/AI/AgentClasses/Actions/Walk.java</file>

@@ -7,7 +7,6 @@ package AI;
 
 import AI.AgentClasses.*;
 import AI.AgentClasses.Actions.*;
-import AI.AgentClasses.Organs.*;
 
 import java.lang.*;
 import java.util.HashMap;
@@ -65,7 +64,21 @@ public class Main {
         
         w.buildWorld();  
 
-
+        Walk walk= new Walk();
+        Integer temp[] = {2};
+        walk.addCondition("distance", temp);
+        Integer temp2[] = {0};
+        walk.addCondition("food", temp2);
+        walk.addCondition("agent", temp2);
+        
+        Organ foot= new Organ("foot", walk);
+        foot.addCharacteristic("size", 2);
+        
+        Eat eat= new Eat();
+        Integer temp3[]={1};
+        eat.addCondition("food", temp3);
+        eat.addCondition("distance", temp3);
+        Organ mouth= new Organ("mouth", eat);
        
         Agent.addCharacteristic("fat");
         Agent.addCharacteristic("lifePoints");
@@ -79,9 +92,9 @@ public class Main {
         
         Agent agent2=new Agent(w,2,2);
         agent2.setCharacteristic("fat", 20);
-        agent1.setCharacteristic("lifePoints", 10);
-        agent2.addOrgan(new Foot(2));
-        agent2.addOrgan(new Mouth());
+        agent2.setCharacteristic("lifePoints", 10);
+        agent2.addOrgan(foot);
+        agent2.addOrgan(mouth);
         w.setElement(agent2, 2, 2);
         
         w.setElement(new Food(), 4, 4);
