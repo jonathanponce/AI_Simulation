@@ -5,6 +5,7 @@
  */
 package AI.AgentClasses;
 
+import AI.Element;
 import AI.Main;
 import AI.World;
 import java.util.ArrayList;
@@ -37,7 +38,6 @@ public abstract class Sense {
     
     };
     
-    public abstract int doAction(World world, int x,int y, int xnext, int ynext);
-    public abstract int evaluateAction(World world, int x,int y, int xnext, int ynext) throws Exception ;
+    public abstract Element sense(World world, int agentX,int agentY, int squareX, int squareY);
 
 }
