@@ -38,6 +38,6 @@ public abstract class Sense {
     
     };
     
-    public abstract Element sense(World world, int agentX,int agentY, int squareX, int squareY);
+    public abstract Object sense(World world, int agentX,int agentY, int squareX, int squareY);
 
 }

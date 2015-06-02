@@ -15,7 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
  *
- * @author User
+ * @author Halyna
  */
 public class See extends Sense{
 
