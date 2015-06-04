@@ -17,7 +17,7 @@ import javax.swing.JPanel;
  *
  * @author Vaferdolosa
  */
-public class World {
+public class World implements Cloneable{
 
     private final int size[];
     private Square grid[][];
@@ -177,9 +177,11 @@ public class World {
     public int getVariable(String name, int x, int y) throws Exception {
         return grid[x][y].getVariable(name);
     }
-    
+
     public Element getElement(int x, int y) throws Exception {
-        return grid[x][y].getElement();
+        int xresult = (x < 0 ? x+getSize()[0] : x)%this.getSize()[0];
+        int yresult = (y < 0 ? y+getSize()[1] : y)%this.getSize()[1];
+        return grid[xresult][yresult].getElement();
     }
     
     public int getLTVariableNumber() {
@@ -403,5 +405,8 @@ public class World {
                 }
             }
         }
+    }
+    public World copy() throws CloneNotSupportedException{
+        return (World) this.clone();
     }
 }

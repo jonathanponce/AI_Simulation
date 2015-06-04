@@ -9,7 +9,11 @@ package AI;
  *
  * @author Vaferdolosa
  */
-public abstract class Element {
+public abstract class Element implements Cloneable {
     public abstract String getName();
     public abstract boolean isAgent();
+    
+    public Element copy() throws CloneNotSupportedException{
+        return (Element) this.clone();
+    }
 }

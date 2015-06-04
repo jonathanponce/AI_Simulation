@@ -45,7 +45,7 @@ public class Walk extends Action {
     @Override
     public int evaluateAction(World world, int x, int y, int xnext, int ynext) {
         int res = 0;
-        int xresult, yresult;
+        /*int xresult, yresult;
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
                 try {
@@ -65,8 +65,18 @@ public class Walk extends Action {
                     Logger.getLogger(Agent.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        }
+        }*/
         return res;
+    }
+
+    @Override
+    public void cancelAction(World world, int xprevious, int yprevious, int xnext, int ynext) throws Exception {
+        Element thisElement = world.getElement(xnext, ynext);
+        if (xprevious != xnext || yprevious != ynext) {
+            ((Agent) thisElement).moveTo(xprevious, yprevious);
+            world.setElement(thisElement, xprevious, yprevious);
+            world.removeElement(xnext, ynext);
+        }
     }
     
 }

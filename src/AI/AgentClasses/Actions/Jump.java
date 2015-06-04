@@ -46,5 +46,10 @@ public class Jump extends Action {
     public int evaluateAction(World world, int x, int y, int xnext, int ynext) {
         return Math.abs(ynext-y) + Math.abs(xnext-x); // manhattan distance
     }
+
+    @Override
+    public void cancelAction(World world, int xprevious, int yprevious, int xnext, int ynext) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

@@ -28,6 +28,7 @@ public abstract class Action {
 
     public abstract String getName();
     public abstract int doAction(World world, int x,int y, int xnext, int ynext);
-    public abstract int evaluateAction(World world, int x,int y, int xnext, int ynext) throws Exception ;
+    public abstract void cancelAction(World world, int xprevious, int yprevious, int xnext, int ynext) throws Exception;
+    public abstract int evaluateAction(World world, int x,int y, int xnext, int ynext) throws Exception;
     
 }
