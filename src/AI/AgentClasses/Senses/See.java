@@ -31,7 +31,7 @@ public class See extends Sense{
     @Override
     public Element sense(World world, int agentX, int agentY, int squareX, int squareY) {
         int dx = Math.abs(squareX - agentX);
-        int dy = Math.abs(squareY -agentY);
+        int dy = Math.abs(squareY - agentY);
         int X = agentX;
         int Y = agentY;
         int v = 0;
@@ -40,8 +40,7 @@ public class See extends Sense{
             dy = Math.abs(squareY - Y);
             if (dx>dy){
                 Y++;
-            }
-            else {
+            } else {
                 X++;
             }
             

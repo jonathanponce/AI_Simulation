@@ -15,16 +15,19 @@ import java.util.HashMap;
 public class Organ {
     private String organName;
     private ArrayList<Action> actions;
+    private ArrayList<Sense> sensors;
     private HashMap<String, Integer> characteristics;
     public Organ(String n,Action a){
         organName=n;
         actions=new ArrayList();
+        sensors=new ArrayList();
         characteristics= new HashMap<String, Integer>();
         actions.add(a);
     }
     public Organ(String n){
         organName=n;
         actions=new ArrayList();
+        sensors=new ArrayList();
         characteristics= new HashMap<String, Integer>();
     };
 
@@ -38,9 +41,14 @@ public class Organ {
     public ArrayList<Action> getActions() {
         return actions;
     }
-
     public void addAction(Action a) {
         this.actions.add(a);
+    }
+    public ArrayList<Sense> getSenses() {
+        return sensors;
+    }
+    public void addSens(Sense a) {
+        this.sensors.add(a);
     }
     
     public void addCharacteristic(String name, int value){

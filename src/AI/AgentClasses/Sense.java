@@ -35,7 +35,6 @@ public abstract class Sense {
     };
     public Sense(int range) { // I assume each agent can have different range for its sense; but all senses have the same sens definition
         this.range = range;
-    
     };
     
     public abstract Object sense(World world, int agentX,int agentY, int squareX, int squareY);

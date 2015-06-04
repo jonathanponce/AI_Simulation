@@ -23,6 +23,8 @@ public class Agent extends Element {
     private static ArrayList<String> agentCharacteristics = new ArrayList<String>();
     private HashMap<String, Integer> characteristics;
     private ArrayList<Organ> organs;
+    private ArrayList<Sense> senses;
+    private ArrayList<Action> actions;
     private World world;
     private int bestx, besty;
     private int posx, posy;
@@ -53,6 +55,8 @@ public class Agent extends Element {
 
     public Agent(World w, int x, int y) {
         organs = new ArrayList<Organ>();
+        senses = new ArrayList<Sense>();
+        actions = new ArrayList<Action>();
         characteristics = new HashMap<String, Integer>();
         for (int i = 0; i < agentCharacteristics.size(); i++) {
             Integer temp[] = {0};
@@ -74,7 +78,19 @@ public class Agent extends Element {
     public String getName() {
         return "agent";
     }
+    
+    public void sense() {
 
+        for (Sense sensor : senses) {
+            int range = sensor.getRange();
+            for (int k = -range; k < range + 1; k++) {
+                for (int l = -(range - Math.abs(k)); l < (range - Math.abs(k)) + 1; l++) {
+                    
+                }
+            }
+        }
+    }
+    
     public void act() throws Exception {
        
         Action toDo = chooseAction();
@@ -113,33 +129,18 @@ public class Agent extends Element {
 
     public void addOrgan(Organ o) {
         organs.add(o);
+        for(Sense sensor: o.getSenses()){
+            senses.add(sensor);
+        }
+        for(Action action: o.getActions()){
+            actions.add(action);
+        }
     }
 
     public Action chooseAction() throws Exception {
         //choose what to do
 
         Action best = null;
-        /*int bestValue = -1;
-         World newWorld = (World) world.copy();
-         int xcoord = -1, ycoord = -1;
-         for (int i = 0; i < organs.size(); i++) {
-         for (int j = 0; j < organs.get(i).getActions().size(); j++) {
-         Action temp = organs.get(i).getActions().get(j);
-         for (int k = 0; k < world.getSize()[0]; k++) {
-         for (int l = 0; l < world.getSize()[1]; l++) {
-         int tempValue = evaluationFunction(k, l, temp);
-         if (tempValue > bestValue) {
-         bestValue = tempValue;
-         best = temp;
-         xcoord = k;
-         ycoord = l;
-         }
-         }
-         }
-         //see the world and the advantages every action offers
-         }
-
-         }*/
         int bestValue = -1000000;
         int xcoord = -1, ycoord = -1;
         for (int organNum = 0; organNum < organs.size(); organNum++) {
@@ -151,15 +152,8 @@ public class Agent extends Element {
                 }
                 for (int k = -limit; k < limit + 1; k++) {
                     for (int l = -(limit - Math.abs(k)); l < (limit - Math.abs(k)) + 1; l++) {
-                        //World world = this.world.copy(); // TODO partial copy
-                        //Agent this = (Agent) this.clone();
-                        //world.setElement(this, this.posx, this.posy);
                         int xresult = (this.posx + k < 0 ? this.posx + k + world.getSize()[0] : this.posx + k) % world.getSize()[0];
                         int yresult = (this.posy + l < 0 ? this.posy + l + world.getSize()[1] : this.posy + l) % world.getSize()[1];
-                        /*if (world.getElement(xresult, yresult)!=null){
-                            Element target= world.getElement(xresult, yresult).copy();
-                            //world.setElement(target, xresult, yresult);
-                        }*/
                         int current = this.evaluationFunction(xresult, yresult, temp);
                         int xprevious= this.posx;
                         int yprevious = this.posy;
