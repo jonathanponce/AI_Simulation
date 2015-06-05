@@ -80,7 +80,7 @@ public class Agent extends Element {
     }
     
     public void sense() {
-
+        /*
         for (Sense sensor : senses) {
             int range = sensor.getRange();
             for (int k = -range; k < range + 1; k++) {
@@ -88,7 +88,7 @@ public class Agent extends Element {
                     
                 }
             }
-        }
+        }*/
     }
     
     public void act() throws Exception {
