@@ -9,6 +9,7 @@ import AI.AgentClasses.Sense;
 import AI.AgentClasses.Agent;
 import AI.Main;
 import AI.Element;
+import AI.NonElement;
 import AI.Square;
 import AI.World;
 import java.util.logging.Level;
@@ -20,7 +21,7 @@ import java.util.logging.Logger;
 public class feelTemperature extends Sense{
 
     public feelTemperature() {
-        super(1); // can only feel the temperature in the square around him
+        super(0, 1); // can only feel the temperature in the square around him. cannot sense elements
     }
 
     @Override
@@ -28,14 +29,23 @@ public class feelTemperature extends Sense{
         return "feelTemperature";
     }
 
+   
+
     @Override
-    public Integer sense(World world, int agentX, int agentY, int squareX, int squareY) {
-        try {
-            return world.getSquare(squareX, squareY).getVariable("temperature");
-        } catch (Exception ex) {
-            Logger.getLogger(feelTemperature.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
+    public int senseVariable(World world, int agentX, int agentY, int squareX, int squareY, String name) {
+       if (name == "temperature") {
+            try {
+                return world.getVariable("temperature", squareX, squareY);
+            } catch (Exception ex) {
+                Logger.getLogger(feelTemperature.class.getName()).log(Level.SEVERE, null, ex);
+            }
+       }
+        return 0;
+    }
+
+    @Override
+    public Element senseElement(World world, int agentX, int agentY, int squareX, int squareY) {
+        return new NonElement();
     }
     
 }

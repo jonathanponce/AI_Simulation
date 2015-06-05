@@ -9,6 +9,7 @@ import AI.AgentClasses.Sense;
 import AI.AgentClasses.Agent;
 import AI.Main;
 import AI.Element;
+import AI.NonElement;
 import AI.Square;
 import AI.World;
 import java.util.logging.Level;
@@ -20,7 +21,7 @@ import java.util.logging.Logger;
 public class Infrared extends Sense{
 
     public Infrared(int range) {
-        super(range);
+        super(0, range); // ELEMENTS ONLY
     }
 
     @Override
@@ -28,13 +29,24 @@ public class Infrared extends Sense{
         return "infrared";
     }
 
+
     @Override
-    public Element sense(World world, int agentX, int agentY, int squareX, int squareY) {
+    public int senseVariable(World world, int agentX, int agentY, int squareX, int squareY, String name) {
+        return 0;
+    }
+
+    @Override
+    public Element senseElement(World world, int agentX, int agentY, int squareX, int squareY) {
         //can only sense food, even if theres an obstacle
-        Element e = world.getSquare(squareX, squareY).getElement();
+        Element e = null;
+        try {
+            e = world.getElement(squareX, squareY);
+        } catch (Exception ex) {
+            Logger.getLogger(Infrared.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (!e.isAgent())
-            return e;
-        return null;
+            return e; // food
+        return new NonElement(); // no food, but might be an agent
     }
     
 }

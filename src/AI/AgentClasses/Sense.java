@@ -16,7 +16,8 @@ import java.util.HashMap;
  */
 public abstract class Sense {
     private HashMap<String, Integer[]> condition= new HashMap<String, Integer[]>();
-    private int range;
+    private int elementRange;
+    private int variableRange;
     private boolean canSenseFood;
     private boolean canSenseAgent;
     
@@ -30,15 +31,19 @@ public abstract class Sense {
 
     public abstract String getName();
     
-    public int getRange() {
-        return range;
-    };
-    public Sense(int range) { // I assume each agent can have different range for its sense; but all senses have the same sens definition
-        this.range = range;
+    public int getElementRange() {
+        return this.elementRange;
     };
     
-    public abstract Object sense(World world, int agentX,int agentY, int squareX, int squareY);
+    public int getVariableRange() {
+        return this.variableRange;
+    };
     
-    //public abstract int senseVariable(World world, int agentX,int agentY, int squareX, int squareY, String name);
-    //public abstract Element senseElement(World world, int agentX,int agentY, int squareX, int squareY);
+    public Sense(int elementRange, int variableRange) { // I assume each agent can have different range for its sense; but all senses have the same sens definition
+        this.elementRange = elementRange;
+        this.variableRange = variableRange;
+    };
+    
+    public abstract int senseVariable(World world, int agentX,int agentY, int squareX, int squareY, String name);
+    public abstract Element senseElement(World world, int agentX,int agentY, int squareX, int squareY);
 }

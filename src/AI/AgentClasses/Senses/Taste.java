@@ -9,6 +9,7 @@ import AI.AgentClasses.Sense;
 import AI.AgentClasses.Agent;
 import AI.Main;
 import AI.Element;
+import AI.NonElement;
 import AI.Square;
 import AI.World;
 import java.util.logging.Level;
@@ -20,7 +21,7 @@ import java.util.logging.Logger;
 public class Taste extends Sense {
 
     public Taste() {
-        super(1); // can only taste around him
+        super(1,0); // can only taste around him (food elements)
     }
 
     @Override
@@ -29,12 +30,22 @@ public class Taste extends Sense {
     }
 
     @Override
-    public Element sense(World world, int agentX, int agentY, int squareX, int squareY) {
-        //can only sense food, even if theres an obstacle
-        Element e = world.getSquare(squareX, squareY).getElement();
+    public int senseVariable(World world, int agentX, int agentY, int squareX, int squareY, String name) {
+        return 0;
+    }
+
+    @Override
+    public Element senseElement(World world, int agentX, int agentY, int squareX, int squareY) {
+         //can only sense food, even if theres an obstacle
+        Element e = null;
+        try {
+            e = world.getElement(squareX, squareY);
+        } catch (Exception ex) {
+            Logger.getLogger(Taste.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (!e.isAgent())
             return e;
-        return null;
+        return new NonElement();
     }
     
 }
