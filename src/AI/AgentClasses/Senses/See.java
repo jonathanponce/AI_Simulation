@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 public class See extends Sense{
 
     public See(int range) {
-        super(0, range); // See can only SEE elements, not detect variables
+        super(range, 0); // See can only SEE elements, not detect variables
     }
 
     @Override
