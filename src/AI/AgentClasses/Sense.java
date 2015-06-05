@@ -38,5 +38,7 @@ public abstract class Sense {
     };
     
     public abstract Object sense(World world, int agentX,int agentY, int squareX, int squareY);
-
+    
+    //public abstract int senseVariable(World world, int agentX,int agentY, int squareX, int squareY, String name);
+    //public abstract Element senseElement(World world, int agentX,int agentY, int squareX, int squareY);
 }

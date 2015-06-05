@@ -325,9 +325,8 @@ public class World implements Cloneable{
                 }
             }
         }
-
-        for (Agent agt : agent) {
-            agt.act();
+        for (int i = 0; i < agent.size(); i++) {
+            agent.get(i).act();
         }
     }
 

@@ -74,11 +74,24 @@ public class Main {
         Organ foot= new Organ("foot", walk);
         foot.addCharacteristic("size", 2);
         
+        Walk walk1= new Walk();
+        walk1.addCondition("distance", temp);
+        walk1.addCondition("food", temp2);
+        walk1.addCondition("agent", temp2);
+        
+        Organ foot1= new Organ("foot", walk1);
+        foot1.addCharacteristic("size", 2);
+        
         Eat eat= new Eat();
         Integer temp3[]={1};
         eat.addCondition("food", temp3);
         eat.addCondition("distance", temp3);
         Organ mouth= new Organ("mouth", eat);
+        
+        Eat eat1= new Eat();
+        eat1.addCondition("food", temp3);
+        eat1.addCondition("distance", temp3);
+        Organ mouth1= new Organ("mouth", eat1);
        
         Agent.addCharacteristic("fat");
         Agent.addCharacteristic("lifePoints");
@@ -86,8 +99,10 @@ public class Main {
         //w.setElement(new Agent(w,3,3), 3, 3);
         Agent agent1=new Agent(w,1,1);
         //System.out.println(agent1.isAgent());
-        agent1.setCharacteristic("fat", 1);
+        agent1.setCharacteristic("fat", 5);
         agent1.setCharacteristic("lifePoints", 10);
+        agent1.addOrgan(foot1);
+        agent1.addOrgan(mouth1);
         w.setElement(agent1, 1, 1);
         
         Agent agent2=new Agent(w,2,2);
