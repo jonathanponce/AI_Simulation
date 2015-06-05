@@ -25,16 +25,23 @@ public class Walk extends Action {
 
     @Override
     public int doAction(World world, int x, int y, int xnext, int ynext) {
+        
         try {
+            
+            
             Element thisElement = world.getElement(x, y);
             if (thisElement == null) {
                 return 0;
             }
             if (x != xnext || y != ynext) {
+
                 ((Agent) thisElement).moveTo(xnext, ynext);
                 world.setElement(thisElement, xnext, ynext);
                 world.removeElement(x, y);
             }
+            else{
+            }
+ 
             return 1;
         } catch (Exception e) {
             System.out.println(e);
@@ -71,6 +78,7 @@ public class Walk extends Action {
 
     @Override
     public void cancelAction(World world, int xprevious, int yprevious, int xnext, int ynext) throws Exception {
+        
         Element thisElement = world.getElement(xnext, ynext);
         if (xprevious != xnext || yprevious != ynext) {
             ((Agent) thisElement).moveTo(xprevious, yprevious);

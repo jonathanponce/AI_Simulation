@@ -28,6 +28,7 @@ public class Agent extends Element {
     private World world;
     private int bestx, besty;
     private int posx, posy;
+    private boolean dead;
 
     public int getPosx() {
         return posx;
@@ -69,10 +70,20 @@ public class Agent extends Element {
         world = w;
         posx = x;
         posy = y;
+        dead = false;
     }
 
     public boolean isAgent() {
         return true;
+    }
+    
+    public boolean isDead(){
+        return dead;
+    }
+    
+    public void die(){
+        dead = true;
+        world.removeElement(posx, posy);
     }
 
     public String getName() {
@@ -94,16 +105,22 @@ public class Agent extends Element {
     public void act() throws Exception {
        
         Action toDo = chooseAction();
+        
         //System.out.println(toDo);
         if (toDo != null) {
+            //System.out.print(",");
+            //System.out.print(bestx);
+            //System.out.print(",");
+            //System.out.println(besty);
             toDo.doAction(world, posx, posy, bestx, besty);
         }
+
         //Consume fat.
         if (characteristics.containsKey("fat")) {
             characteristics.replace("fat", characteristics.get("fat"), characteristics.get("fat") - 1);
             //System.out.println(characteristics.get("fat"));
             if (characteristics.get("fat") < 0) {
-                world.removeElement(posx, posy);
+                die();
             }
         }
     }

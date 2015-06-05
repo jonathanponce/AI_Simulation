@@ -37,7 +37,7 @@ public class World implements Cloneable{
     private List<Main.Cfunction> IRule;
     private List<Main.Cfunction> WRule;
 
-    private List<Agent> agent;
+    private List<Agent> agents;
 
     private long time;
     private boolean end;
@@ -69,7 +69,7 @@ public class World implements Cloneable{
         IRule = new LinkedList();
         WRule = new LinkedList();
 
-        agent = new LinkedList();
+        agents = new LinkedList();
 
         time = 0;
         end = false;
@@ -214,11 +214,11 @@ public class World implements Cloneable{
     
 
     private void addAgent(Agent agent) {
-        this.agent.add(agent);
+        this.agents.add(agent);
     }
 
     private void removeAgent(Agent agent) {
-        this.agent.remove(agent);
+        this.agents.remove(agent);
     }
 
     public void setElement(Element element, int x, int y) {
@@ -325,8 +325,18 @@ public class World implements Cloneable{
                 }
             }
         }
-        for (int i = 0; i < agent.size(); i++) {
-            agent.get(i).act();
+
+        List<Agent> tmpAgents =  new LinkedList();
+        
+        for (int i = 0; i < agents.size(); i++) {
+            Agent a = agents.get(i);
+            if(!a.isDead()){
+                tmpAgents.add(a);
+            }
+        }
+        
+        for (int i = 0; i < tmpAgents.size(); i++) {
+            tmpAgents.get(i).act();
         }
     }
 
