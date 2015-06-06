@@ -57,6 +57,8 @@ public class See extends Sense{
             } catch (Exception ex) {
                 Logger.getLogger(See.class.getName()).log(Level.SEVERE, null, ex);
             }
+            x += slopeX;
+            y += slopeY;
         }
         if (!obstacle)
             try {
