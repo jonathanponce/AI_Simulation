@@ -47,15 +47,20 @@ public class Smell extends Sense {
         
         
         double distance = Math.sqrt(Math.pow(squareX - agentX, 2) + Math.pow(squareY - agentY, 2));
-        int random = new Random().nextInt(this.getElementRange());
-        
-        if (random > distance) // it will sense INCORRECTLY
+        int random = new Random().nextInt(100);
+        double decimalDistance = (distance/this.getElementRange()); // something like 0.80
+        double cutoff = 5*decimalDistance; // the closer we are, the smaller the cutoff, the smaller the chances of sensing incorrectly
+        if (random > cutoff) // we sense correctly
+        {
+            return e; // return whether theres food or not
+        }
+        else {
             if (e == null)
                 return new Food(); // it thinks there's food but theres not
             else
                 return null; // it thinks theres no food but there is
-        else // it will sense CORRECTLY
-            return e; // return whether theres food or not
+        }
+        
     }
     
 }
