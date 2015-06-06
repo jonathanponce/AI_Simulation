@@ -90,10 +90,14 @@ public class World implements Cloneable{
         return size;
     }
     public String getTerrainInfo(int x, int y){
+        x = (x < 0 ? x+getSize()[0] : x)%this.getSize()[0];
+        y = (y < 0 ? y+getSize()[1] : y)%this.getSize()[1];
         draw();
         return canvas.getTerrainInfo(x,y);
     }
      public String getObjectInfo(int x, int y){
+         x = (x < 0 ? x+getSize()[0] : x)%this.getSize()[0];
+        y = (y < 0 ? y+getSize()[1] : y)%this.getSize()[1];
         draw();
         return canvas.getObjectInfo(x,y);
     }
@@ -179,9 +183,9 @@ public class World implements Cloneable{
     }
 
     public Element getElement(int x, int y) throws Exception {
-        int xresult = (x < 0 ? x+getSize()[0] : x)%this.getSize()[0];
-        int yresult = (y < 0 ? y+getSize()[1] : y)%this.getSize()[1];
-        return grid[xresult][yresult].getElement();
+        x = (x < 0 ? x+getSize()[0] : x)%this.getSize()[0];
+        y = (y < 0 ? y+getSize()[1] : y)%this.getSize()[1];
+        return grid[x][y].getElement();
     }
     
     public int getLTVariableNumber() {
@@ -193,21 +197,29 @@ public class World implements Cloneable{
     }
     
     public void setFixedLTVar(int index, int x, int y, int delay){
+        x = (x < 0 ? x+getSize()[0] : x)%this.getSize()[0];
+        y = (y < 0 ? y+getSize()[1] : y)%this.getSize()[1];
         Square s = getSquare(x, y);
         s.setLTFixed(index,delay);
     }
     
     public void setFixedLTVar(int index, int x, int y){
+        x = (x < 0 ? x+getSize()[0] : x)%this.getSize()[0];
+        y = (y < 0 ? y+getSize()[1] : y)%this.getSize()[1];
         Square s = getSquare(x, y);
         s.setLTFixed(index);
     }
     
     public void setUnfixedLTVar(int index, int x, int y){
+        x = (x < 0 ? x+getSize()[0] : x)%this.getSize()[0];
+        y = (y < 0 ? y+getSize()[1] : y)%this.getSize()[1];
         Square s = getSquare(x, y);
         s.setLTUnfixed(index);
     }
     
     public void setLTVarValue(int index, int x, int y, int value){
+        x = (x < 0 ? x+getSize()[0] : x)%this.getSize()[0];
+        y = (y < 0 ? y+getSize()[1] : y)%this.getSize()[1];
         Square s = getSquare(x, y);
         s.setLTValue(index,value);
     }
@@ -222,6 +234,8 @@ public class World implements Cloneable{
     }
 
     public void setElement(Element element, int x, int y) {
+        x = (x < 0 ? x+getSize()[0] : x)%this.getSize()[0];
+        y = (y < 0 ? y+getSize()[1] : y)%this.getSize()[1];
         if (element.isAgent()) {
             addAgent((Agent) element);
         }
@@ -229,6 +243,8 @@ public class World implements Cloneable{
     }
 
     public void removeElement(int x, int y) {
+        x = (x < 0 ? x+getSize()[0] : x)%this.getSize()[0];
+        y = (y < 0 ? y+getSize()[1] : y)%this.getSize()[1];
         if (grid[x][y].getElement() != null) {
             if (grid[x][y].getElement().isAgent()) {
                 removeAgent(((Agent) grid[x][y].getElement()));
@@ -242,6 +258,8 @@ public class World implements Cloneable{
     }
 
     public Square getSquare(int x, int y) {
+        x = (x < 0 ? x+getSize()[0] : x)%this.getSize()[0];
+        y = (y < 0 ? y+getSize()[1] : y)%this.getSize()[1];
         return grid[x][y];
     }
 
