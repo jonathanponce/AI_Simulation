@@ -17,6 +17,8 @@ public class Organ {
     private ArrayList<Action> actions;
     private ArrayList<Sense> sensors;
     private HashMap<String, Integer> characteristics;
+    
+    
     public Organ(String n,Action a){
         organName=n;
         actions=new ArrayList();
@@ -30,7 +32,7 @@ public class Organ {
         sensors=new ArrayList();
         characteristics= new HashMap<String, Integer>();
     };
-
+  
     public String getOrganName(){
         return organName;
     }

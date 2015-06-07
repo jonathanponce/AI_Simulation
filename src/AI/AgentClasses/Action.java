@@ -17,6 +17,7 @@ import java.util.HashMap;
 public abstract class Action {
 
     private HashMap<String, Integer[]> condition= new HashMap<String, Integer[]>();
+    protected Agent agent;
     
     public HashMap<String, Integer[]> getCondition() {
         return condition;
@@ -25,7 +26,11 @@ public abstract class Action {
     public void addCondition(String s, Integer[] i){
         condition.put(s, i);
     }
-
+    
+    public void setAgent(Agent agent){
+        this.agent = agent;
+    }
+    
     public abstract String getName();
     public abstract int doAction(World world, int x,int y, int xnext, int ynext);
     public abstract void cancelAction(World world, int xprevious, int yprevious, int xnext, int ynext) throws Exception;

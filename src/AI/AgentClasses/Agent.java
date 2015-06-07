@@ -22,6 +22,8 @@ public class Agent extends Element {
 
     private static ArrayList<String> agentCharacteristics = new ArrayList<String>();
     private HashMap<String, Integer> characteristics;
+    private HashMap<Integer, Element> sensedElement;
+    private HashMap<Integer, Integer> sensedVariable;
     private ArrayList<Organ> organs;
     private ArrayList<Sense> senses;
     private ArrayList<Action> actions;
@@ -59,6 +61,8 @@ public class Agent extends Element {
         senses = new ArrayList<Sense>();
         actions = new ArrayList<Action>();
         characteristics = new HashMap<String, Integer>();
+        sensedElement = new HashMap<>();
+        sensedVariable = new HashMap<>();      
         for (int i = 0; i < agentCharacteristics.size(); i++) {
             Integer temp[] = {0};
             try {
@@ -86,23 +90,99 @@ public class Agent extends Element {
         world.removeElement(posx, posy);
     }
 
+    @Override
     public String getName() {
         return "agent";
     }
     
-    public void sense() {
-        /*
+    public Element senseElement(int x, int y) {
+        if(sensedElement.containsKey(world.getCoordHash(x, y))){
+            return sensedElement.get(world.getCoordHash(x, y));
+        }
+        
+        HashMap<Element, Integer> detected = new HashMap<>();//number of sensor detecting an element
+        
+        int bestOccurrence=0;//select most likely element
+        Element likelyElement = null;
+        
         for (Sense sensor : senses) {
-            int range = sensor.getRange();
-            for (int k = -range; k < range + 1; k++) {
-                for (int l = -(range - Math.abs(k)); l < (range - Math.abs(k)) + 1; l++) {
-                    
+            int elementRange = sensor.getElementRange();
+            int elementRange2 = elementRange*elementRange;
+            int distance2 = (int)(Math.pow(x-posx,2)+Math.pow(y-posy,2));
+            
+            if(distance2<elementRange2){
+                Element e = sensor.senseElement(world, posx, posy, x, y);
+                if(e != null && e.getName() == "nonElement"){
+                    e = null;
                 }
+                
+                if(detected.containsKey(e)){
+                    int occurrence = detected.get(e)+1;
+                    detected.put(e, occurrence);
+                    if(occurrence>bestOccurrence){
+                        bestOccurrence=occurrence;
+                        likelyElement = e;
+                    }
+                }
+                else{
+                    detected.put(e, 1);
+                    if(1>bestOccurrence){
+                        bestOccurrence=1;
+                        likelyElement = e;
+                    }
+                }
+                
             }
-        }*/
+        }
+        sensedElement.put(world.getCoordHash(x, y), likelyElement);
+        
+        return likelyElement;
+    }
+    
+    public Integer senseVariable(int x, int y, String name) {
+        if(sensedVariable.containsKey(world.getCoordHash(x, y))){
+            return sensedVariable.get(world.getCoordHash(x, y));
+        }
+        
+        HashMap<Integer, Integer> detected = new HashMap<>();//number of sensor detecting an element
+        
+        int bestOccurrence=0;//select most likely element
+        Integer likelyVariable = null;
+        
+        for (Sense sensor : senses) {
+            int elementRange = sensor.getElementRange();
+            int elementRange2 = elementRange*elementRange;
+            int distance2 = (int)(Math.pow(x-posx,2)+Math.pow(y-posy,2));
+            
+            if(distance2<elementRange2){
+                Integer var = sensor.senseVariable(world, posx, posy, x, y, name);
+                
+                if(detected.containsKey(var)){
+                    int occurrence = detected.get(var)+1;
+                    detected.put(var, occurrence);
+                    if(occurrence>bestOccurrence){
+                        bestOccurrence=occurrence;
+                        likelyVariable = var;
+                    }
+                }
+                else{
+                    detected.put(var, 1);
+                    if(1>bestOccurrence){
+                        bestOccurrence=1;
+                        likelyVariable = var;
+                    }
+                }
+                
+            }
+        }
+        sensedVariable.put(world.getCoordHash(x, y), likelyVariable);
+        
+        return likelyVariable;
     }
     
     public void act() throws Exception {
+        sensedElement = new HashMap<>();//reset computional memory about map
+        sensedVariable = new HashMap<>(); 
        
         Action toDo = chooseAction();
         
@@ -151,6 +231,7 @@ public class Agent extends Element {
         }
         for(Action action: o.getActions()){
             actions.add(action);
+            action.setAgent(this);
         }
     }
 

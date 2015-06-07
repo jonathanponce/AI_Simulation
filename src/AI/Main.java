@@ -48,7 +48,7 @@ public class Main {
     }
 
     
-    Main() throws Exception{
+    Main() throws Exception{        
         //CODE HERE
         World w = new World(10,10);
         

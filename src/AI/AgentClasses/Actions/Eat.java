@@ -30,7 +30,7 @@ public class Eat extends Action {
     public int doAction(World world, int x, int y, int xnext, int ynext) {
         
         try {
-        
+            //agent.senseElement(x, y)
             if (world.getElement(xnext, ynext) != null && world.getElement(xnext, ynext).getName().equals("food")) {
                 //System.out.print("-food");
                 //System.out.print(xnext);

@@ -89,6 +89,11 @@ public class World implements Cloneable{
     public int[] getSize() {
         return size;
     }
+    
+    public int getCoordHash(int x,int y){
+        return x+y*size[0];
+    }
+    
     public String getTerrainInfo(int x, int y){
         x = (x < 0 ? x+getSize()[0] : x)%this.getSize()[0];
         y = (y < 0 ? y+getSize()[1] : y)%this.getSize()[1];
