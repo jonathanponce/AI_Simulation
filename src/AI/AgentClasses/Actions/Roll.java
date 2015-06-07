@@ -44,6 +44,8 @@ public class Roll extends Action {
     public int evaluateAction(World world, int x, int y, int xnext, int ynext) throws Exception {
         int dx = Math.abs(xnext - x);
         int dy = Math.abs(ynext -y);
+        int vx = (int)Math.signum(dx);
+        int vy = (int)Math.signum(dx);
         int X = x;
         int Y = y;
         int currentSlope = world.getSquare(X, Y).getVariable("slope");
@@ -52,10 +54,10 @@ public class Roll extends Action {
             dx = Math.abs(xnext - X);
             dy = Math.abs(ynext - Y);
             if (dx>dy){
-                Y++;
+                X+=vx;
             }
             else {
-                X++;
+                Y+=vy;
             }
             Square s = world.getSquare(X, Y);
             v+=(currentSlope - s.getVariable("slope"));
