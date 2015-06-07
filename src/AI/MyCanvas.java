@@ -10,14 +10,20 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Arc2D;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -45,6 +51,9 @@ class MyCanvas extends JPanel implements ActionListener {
     private Color[][] colors;
     private int displacedX = 0, displacedY = 0;
     private boolean pressed = false;
+    private Image ground;
+    private Image food;
+    private Image agentImage;
 
     public void adjust(int ww, int hh) {
         this.w = (int) (ww);
@@ -101,6 +110,13 @@ class MyCanvas extends JPanel implements ActionListener {
         terrainInfo = new String[sizex][sizey];
         objects = new int[sizex][sizey];
         colors = new Color[sizex][sizey];
+        try {
+            ground=ImageIO.read(new File("ground.jpg"));
+            food=ImageIO.read(new File("broccoli.png"));
+            agentImage=ImageIO.read(new File("agent.png"));
+        } catch (IOException ex) {
+            Logger.getLogger(MyCanvas.class.getName()).log(Level.SEVERE, null, ex);
+        }
         for (int i = 0; i < sizex; i++) {
             objectInfo[i] = new String[sizey];
             terrainInfo[i] = new String[sizey];
@@ -152,22 +168,25 @@ class MyCanvas extends JPanel implements ActionListener {
                     tempY += totalHeight;
                 }
                 g2.setColor(Color.getHSBColor((float) ((20.0) / 360.0), 0.8f, 0.8f));
-                g2.fillRect(tempX, tempY, size, size);
+                //g2.fillRect(tempX, tempY, size, size);
+                
+                g2.drawImage(ground, tempX, tempY,size,size, this);
                 g2.setColor(Color.black);
                 g2.drawRect(tempX, tempY, size, size);
                 if (objects[i][j] != 0) {
                     g2.setColor(colors[i][j]);
                     switch( objects[i][j]){
                         case 1:
-                            g2.fill(new Arc2D.Double(tempX, tempY, size, size, 0, 360, Arc2D.PIE));
+                            //g2.fill(new Arc2D.Double(tempX, tempY, size, size, 0, 360, Arc2D.PIE));
+                            g2.drawImage(food, tempX, tempY,size,size, this);
                             break;
                         case 2:
                             g2.fill(new Arc2D.Double(tempX, tempY, size/2, size/2, 0, 360, Arc2D.PIE));
                             g2.fill(new Arc2D.Double(tempX+size/2, tempY+size/2, size/2, size/2, 0, 360, Arc2D.PIE));
                             break;
                         case 3:
-                            
-                            g2.fillRect(tempX, tempY, size/2,size/2);
+                            g2.drawImage(agentImage, tempX, tempY,size,size, this);
+                           // g2.fillRect(tempX, tempY, size/2,size/2);
                             break;
                         
                     }

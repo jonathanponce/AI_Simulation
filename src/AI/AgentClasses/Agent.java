@@ -318,7 +318,12 @@ public class Agent extends Element {
         }
         return bestValue;
     }
-
+public HashMap<String, Integer> getCharacteristics() {
+        return characteristics;
+    }
+	public ArrayList<Organ> getOrgans() {
+        return organs;
+    }
     public int evaluationFunction(int x, int y, Action a) throws Exception {
 
         try {
