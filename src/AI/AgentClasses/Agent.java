@@ -36,7 +36,7 @@ public class Agent extends Element {
         return posx;
     }
     private int getDepthMax(){
-        return 2;
+        return 3;
     }
 
     public void setPosx(int posx) {
@@ -239,6 +239,10 @@ public class Agent extends Element {
         //choose what to do
 
         Action best = null;
+        ArrayList<Action> bestActions = new ArrayList<>();
+        ArrayList<Integer> bestxs = new ArrayList<>();
+        ArrayList<Integer> bestys = new ArrayList<>();
+                
         int bestValue = -1000000;
         int xcoord = -1, ycoord = -1;
         for (int organNum = 0; organNum < organs.size(); organNum++) {
@@ -259,10 +263,21 @@ public class Agent extends Element {
                             temp.doAction(world, this.posx, this.posy, xresult, yresult);
                             current = current + this.soloMax(world, this, this.getDepthMax())/2;
                             if (current > bestValue) {
+                                bestActions = new ArrayList<Action>();
+                                bestActions.add(temp);
                                 bestValue = current;
                                 best = temp;
                                 xcoord = xresult;
                                 ycoord = yresult;
+                                bestxs = new ArrayList<Integer>();
+                                bestxs.add(xresult);
+                                bestys = new ArrayList<Integer>();
+                                bestys.add(yresult);
+                            }
+                            else if(current == bestValue){
+                                bestxs.add(xresult);
+                                bestys.add(yresult);
+                                bestActions.add(temp);
                             }
                             temp.cancelAction(world, xprevious, yprevious, xresult, yresult);
                         }
@@ -270,8 +285,14 @@ public class Agent extends Element {
                 }
             }
         }
+        int r = (int)(world.getRandom()*bestActions.size());
+        best = bestActions.get(r);
+        
         bestx = xcoord;
         besty = ycoord;
+        
+        bestx = bestxs.get(r);
+        besty = bestys.get(r);
         return best;
     }
 

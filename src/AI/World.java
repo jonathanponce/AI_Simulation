@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Random;
 import javax.swing.JPanel;
 
 /*
@@ -41,6 +42,7 @@ public class World implements Cloneable{
 
     private long time;
     private boolean end;
+    private Random random;
 
     jFrame1 jframe;
     MyCanvas canvas;
@@ -73,6 +75,7 @@ public class World implements Cloneable{
 
         time = 0;
         end = false;
+        random=new Random(0);//System.currentTimeMillis());
 
         jframe = new jFrame1(weight, height);
 
@@ -88,6 +91,10 @@ public class World implements Cloneable{
 
     public int[] getSize() {
         return size;
+    }
+    
+    public float getRandom(){
+        return random.nextFloat();
     }
     
     public int getCoordHash(int x,int y){
