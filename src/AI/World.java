@@ -246,6 +246,13 @@ public class World implements Cloneable{
     }
 
     public void setElement(Element element, int x, int y) {
+        if(grid[x][y].getElement()!=null){
+            System.err.println("Warning: Element created on another one. First one deleted!");
+            if(grid[x][y].getElement().isAgent()){
+                removeAgent((Agent)grid[x][y].getElement());
+                System.err.println("Warning: Element created on an Agent. Agent deleted!");
+            }
+        }
         x = (x < 0 ? x+getSize()[0] : x)%this.getSize()[0];
         y = (y < 0 ? y+getSize()[1] : y)%this.getSize()[1];
         if (element.isAgent()) {
