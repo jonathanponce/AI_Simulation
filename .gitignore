@@ -44,3 +44,10 @@ Temporary Items
 nbproject/private/private.xml
 nbproject/private/private.xml
 /dist/
+src/AI/AgentClasses/Organ.java
+
+src/AI/AgentClasses/Organ.java
+
+src/AI/AgentClasses/Senses/See.java
+
+src/AI/World.java
