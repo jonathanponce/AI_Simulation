@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  */
 public class Agent extends Element {
 
-    private static ArrayList<String> agentCharacteristics = new ArrayList<String>();
+    public static ArrayList<String> agentCharacteristics = new ArrayList<String>();
     private HashMap<String, Integer> characteristics;
     private HashMap<Integer, Element> sensedElement;
     private HashMap<Integer, Integer> sensedVariable;
@@ -36,7 +36,7 @@ public class Agent extends Element {
         return posx;
     }
     private int getDepthMax(){
-        return 3;
+        return 2;
     }
 
     public void setPosx(int posx) {
@@ -188,10 +188,6 @@ public class Agent extends Element {
         
         //System.out.println(toDo);
         if (toDo != null) {
-            //System.out.print(",");
-            //System.out.print(bestx);
-            //System.out.print(",");
-            //System.out.println(besty);
             toDo.doAction(world, posx, posy, bestx, besty);
         }
 
@@ -254,38 +250,47 @@ public class Agent extends Element {
                 }
                 for (int k = -limit; k < limit + 1; k++) {
                     for (int l = -(limit - Math.abs(k)); l < (limit - Math.abs(k)) + 1; l++) {
-                        int xresult = (this.posx + k < 0 ? this.posx + k + world.getSize()[0] : this.posx + k) % world.getSize()[0];
-                        int yresult = (this.posy + l < 0 ? this.posy + l + world.getSize()[1] : this.posy + l) % world.getSize()[1];
-                        int current = this.evaluationFunction(xresult, yresult, temp);
-                        int xprevious= this.posx;
-                        int yprevious = this.posy;
-                        if (current > -1000000) {
-                            temp.doAction(world, this.posx, this.posy, xresult, yresult);
-                            current = current + this.soloMax(world, this, this.getDepthMax())/2;
-                            if (current > bestValue) {
-                                bestActions = new ArrayList<Action>();
-                                bestActions.add(temp);
-                                bestValue = current;
-                                best = temp;
-                                xcoord = xresult;
-                                ycoord = yresult;
-                                bestxs = new ArrayList<Integer>();
-                                bestxs.add(xresult);
-                                bestys = new ArrayList<Integer>();
-                                bestys.add(yresult);
+                        int xtarget = (this.posx + k < 0 ? this.posx + k + world.getSize()[0] : this.posx + k) % world.getSize()[0];
+                        int ytarget = (this.posy + l < 0 ? this.posy + l + world.getSize()[1] : this.posy + l) % world.getSize()[1];
+                        if (this.isPossibleAction(xtarget, ytarget, temp)) {
+                            int current = this.evaluationFunction(xtarget, ytarget, temp);
+                            int xprevious = this.posx;
+                            int yprevious = this.posy;
+                            if (current > -1000000) {
+                                temp.doAction(world, this.posx, this.posy, xtarget, ytarget);
+                                current = current + this.soloMax(world, this, this.getDepthMax()) / 2;
+                                if (current > bestValue) {
+                                    bestActions = new ArrayList<Action>();
+                                    bestActions.add(temp);
+                                    bestValue = current;
+                                    best = temp;
+                                    xcoord = xtarget;
+                                    ycoord = ytarget;
+                                    bestxs = new ArrayList<Integer>();
+                                    bestxs.add(xtarget);
+                                    bestys = new ArrayList<Integer>();
+                                    bestys.add(ytarget);
+                                } else if (current == bestValue) {
+                                    bestxs.add(xtarget);
+                                    bestys.add(ytarget);
+                                    bestActions.add(temp);
+                                }
+                                temp.cancelAction(world, xprevious, yprevious, xtarget, ytarget);
                             }
-                            else if(current == bestValue){
-                                bestxs.add(xresult);
-                                bestys.add(yresult);
-                                bestActions.add(temp);
-                            }
-                            temp.cancelAction(world, xprevious, yprevious, xresult, yresult);
                         }
                     }
                 }
             }
         }
+        
+        if (bestActions.size()==0){
+            //In this case no actions are possible.
+            return null;
+        }
+        
         int r = (int)(world.getRandom()*bestActions.size());
+        System.out.print("r= ");
+        System.out.println(r);
         best = bestActions.get(r);
         
         bestx = xcoord;
@@ -311,22 +316,17 @@ public class Agent extends Element {
                         }
                         for (int k = -limit; k < limit + 1; k++) {
                             for (int l = -(limit - Math.abs(k)); l < (limit - Math.abs(k)) + 1; l++) {
-                                //World world = w.copy(); // TODO partial copy
-                                //Agent this = (Agent) thisAgent.clone();
-                                //world.setElement(this, this.posx, this.posy);
-                                int xresult = (this.posx + k < 0 ? this.posx + k + world.getSize()[0] : this.posx + k) % world.getSize()[0];
-                                int yresult = (this.posy + l < 0 ? this.posy + l + world.getSize()[1] : this.posy + l) % world.getSize()[1];
-                                /*if (world.getElement(xresult, yresult) != null) {
-                                    Element target = world.getElement(xresult, yresult).copy();
-                                    world.setElement(target, xresult, yresult);
-                                }*/
-                                int xprevious = this.posx;
-                                int yprevious = this.posy;
-                                int current = this.evaluationFunction(xresult, yresult, temp);
-                                if (current > -1000000) {
-                                    temp.doAction(world, this.posx, this.posy, xresult, yresult);
-                                    bestValue = Math.max(bestValue, current + this.soloMax(world, this, depthLeft- 1)/2);
-                                    temp.cancelAction(world, xprevious, yprevious, xresult, yresult);
+                                int xtarget = (this.posx + k < 0 ? this.posx + k + world.getSize()[0] : this.posx + k) % world.getSize()[0];
+                                int ytarget = (this.posy + l < 0 ? this.posy + l + world.getSize()[1] : this.posy + l) % world.getSize()[1];
+                                if (this.isPossibleAction(xtarget, ytarget, temp)) {
+                                    int xprevious = this.posx;
+                                    int yprevious = this.posy;
+                                    int current = this.evaluationFunction(xtarget, ytarget, temp);
+                                    if (current > -1000000) {
+                                        temp.doAction(world, this.posx, this.posy, xtarget, ytarget);
+                                        bestValue = Math.max(bestValue, current + this.soloMax(world, this, depthLeft - 1) / 2);
+                                        temp.cancelAction(world, xprevious, yprevious, xtarget, ytarget);
+                                    }
                                 }
                             }
                         }
@@ -339,76 +339,69 @@ public class Agent extends Element {
         }
         return bestValue;
     }
-public HashMap<String, Integer> getCharacteristics() {
+
+    public HashMap<String, Integer> getCharacteristics() {
         return characteristics;
     }
-	public ArrayList<Organ> getOrgans() {
+
+    public ArrayList<Organ> getOrgans() {
         return organs;
     }
-    public int evaluationFunction(int x, int y, Action a) throws Exception {
+    
+    public boolean isPossibleAction(int x, int y, Action a) throws Exception {
 
-        try {
-            // We first verify that this action is possible on this square.
-            Iterator it = a.getCondition().entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry pair = (Map.Entry) it.next();
-                // if the condition is about a max distance (e.g. movement)
-                if (pair.getKey().equals("distance")) {
-                    int xdist = Math.min(Math.abs(x - posx), Math.abs(posx + world.getSize()[0] - x));
-                    // x-posx<0 ? x-posx+world.getSize()[0] : x-posx;
-                    int ydist = Math.min(Math.abs(y - posy), Math.abs(posy + world.getSize()[1] - y));
-                    //y-posy<0 ? y-posy+world.getSize()[1] : y-posy;
-                    if (((Integer[]) (pair.getValue()))[0] >= xdist + ydist) {
-                        continue;
-                    } else {
-                        return -1000000;
-                    }
+        // We first verify that this action is possible on this square.
+        Iterator it = a.getCondition().entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry) it.next();
+            // if the condition is about a max distance (e.g. movement)
+            if (pair.getKey().equals("distance")) {
+                int xdist = Math.min(Math.abs(x - posx), Math.abs(posx + world.getSize()[0] - x));
+                // x-posx<0 ? x-posx+world.getSize()[0] : x-posx;
+                int ydist = Math.min(Math.abs(y - posy), Math.abs(posy + world.getSize()[1] - y));
+                //y-posy<0 ? y-posy+world.getSize()[1] : y-posy;
+                if (((Integer[]) (pair.getValue()))[0] >= xdist + ydist) {
+                    continue;
+                } else {
+                    return false;
                 }
-                // For the conditions on the terrain (e.g. max temperature).
-                if (((Integer[]) (pair.getValue())).length == 2) {
-                    try {
-                        if (world.getVariable((String) pair.getKey(), x, y) >= ((Integer[]) pair.getValue())[0]
-                                && world.getVariable((String) pair.getKey(), x, y) <= ((Integer[]) pair.getValue())[1]) {
-                            continue;
-                        } else {
-                            return -1000000;
-                        }
-                    } catch (Exception ex) {
-                        Logger.getLogger(Agent.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+            }
+            // For the conditions on the terrain (e.g. max temperature).
+            if (((Integer[]) (pair.getValue())).length == 2) {
+                if (world.getVariable((String) pair.getKey(), x, y) >= ((Integer[]) pair.getValue())[0]
+                        && world.getVariable((String) pair.getKey(), x, y) <= ((Integer[]) pair.getValue())[1]) {
+                    continue;
+                } else {
+                    return false;
                 }
-
-                // For the condition about an object on this square (e.g. eat).
-                if (((Integer[]) (pair.getValue())).length == 1) {
-                    try {
-                        if (((Integer[]) pair.getValue())[0] == 1) {
-                            if (world.getElement(x, y) != null && world.getElement(x, y).getName().equals(pair.getKey())) {
-                                continue;
-                            } else {
-                                return -1000000;
-                            }
-                        } else { // we have: ((Integer[])pair.getValue())[0]==0
-                            if (world.getElement(x, y) != null && world.getElement(x, y).getName().equals(pair.getKey())) {
-                                return -1000000;
-                            } else {
-                                continue;
-                            }
-                        }
-                    } catch (Exception ex) {
-                        Logger.getLogger(Agent.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-
-                //System.out.println(pair.getKey() + " = " + pair.getValue());
-                it.remove(); // avoids a ConcurrentModificationException
-                return -1000000;
             }
 
-            //Now we evaluate the action.
-            return a.evaluateAction(world, posx, posy, x, y);
-        } catch (Exception ex) {
-            Logger.getLogger(Agent.class.getName()).log(Level.SEVERE, null, ex);
-            return -1;
+            // For the condition about an object on this square (e.g. eat).
+            if (((Integer[]) (pair.getValue())).length == 1) {
+                if (((Integer[]) pair.getValue())[0] == 1) {
+                    if (world.getElement(x, y) != null && world.getElement(x, y).getName().equals(pair.getKey())) {
+                        continue;
+                    } else {
+                        return false;
+                    }
+                } else { // we have: ((Integer[])pair.getValue())[0]==0
+                    if (world.getElement(x, y) != null && world.getElement(x, y).getName().equals(pair.getKey())) {
+                        return false;
+                    } else {
+                        continue;
+                    }
+                }
+            }
+
+            //System.out.println(pair.getKey() + " = " + pair.getValue());
+            it.remove(); // avoids a ConcurrentModificationException
+            return false;
         }
+
+        return a.isActionPossible(world, posx, posy, x, y);
+    }
+
+    public int evaluationFunction(int x, int y, Action a) throws Exception {
+        return a.evaluateAction(world, posx, posy, x, y);
     }
 }

@@ -39,8 +39,6 @@ public class Walk extends Action {
                 world.setElement(thisElement, xnext, ynext);
                 world.removeElement(x, y);
             }
-            else{
-            }
  
             return 1;
         } catch (Exception e) {

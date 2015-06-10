@@ -51,7 +51,7 @@ public class Main {
     
     Main() throws Exception{        
         //CODE HERE
-        World w = new World(50,50);
+        World w = new World(10,10);
         
         w.addVariable("Friction", 1);
         w.addVariable("slope", (World world,int x,int y)->{return x+y;});
@@ -126,7 +126,7 @@ public class Main {
         Agent.addCharacteristic("fat");
         Agent.addCharacteristic("lifePoints");
         
-        for (int numAgent=0; numAgent<50; numAgent++){
+        for (int numAgent=0; numAgent<2; numAgent++){
             float r = w.getRandom();
             int x = (int)(w.getSize()[0]*r);
             
@@ -145,8 +145,15 @@ public class Main {
             Eat eat= new Eat();
             eat.addCondition("food", un);
             eat.addCondition("distance", un);
-            Organ mouth= new Organ("mouth", eat);
-            
+            Organ mouth = new Organ("mouth", eat);
+
+            Reproduce reproduce = new Reproduce();
+            reproduce.addCondition("distance", un);
+            reproduce.addCondition("agent", un);
+
+            Organ sexe = new Organ("sexe", reproduce);
+
+            //nouvAgent.addOrgan(sexe);
             nouvAgent.addOrgan(foot);
             nouvAgent.addOrgan(mouth);
             w.setElement(nouvAgent, x, numAgent);

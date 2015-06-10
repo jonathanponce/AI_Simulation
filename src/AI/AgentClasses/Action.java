@@ -31,6 +31,10 @@ public abstract class Action {
         this.agent = agent;
     }
     
+    public boolean isActionPossible(World world, int x,int y, int xnext, int ynext){
+        return true;
+    }
+    
     public abstract String getName();
     public abstract int doAction(World world, int x,int y, int xnext, int ynext);
     public abstract void cancelAction(World world, int xprevious, int yprevious, int xnext, int ynext) throws Exception;
