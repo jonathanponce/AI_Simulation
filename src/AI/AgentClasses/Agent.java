@@ -14,13 +14,10 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author Vaferdolosa
- */
 public class Agent extends Element {
 
     public static ArrayList<String> agentCharacteristics = new ArrayList<String>();
+    public static ArrayList<String> agentOrgans = new ArrayList<String>();
     private HashMap<String, Integer> characteristics;
     private HashMap<Integer, Element> sensedElement;
     private HashMap<Integer, Integer> sensedVariable;
@@ -38,19 +35,15 @@ public class Agent extends Element {
     private int getDepthMax(){
         return 2;
     }
-
     public void setPosx(int posx) {
         this.posx = posx;
     }
-
     public int getPosy() {
         return posy;
     }
-
     public void setPosy(int posy) {
         this.posy = posy;
     }
-
     public void moveTo(int xNew, int yNew) {
         setPosx(xNew);
         setPosy(yNew);
@@ -63,10 +56,10 @@ public class Agent extends Element {
         characteristics = new HashMap<String, Integer>();
         sensedElement = new HashMap<>();
         sensedVariable = new HashMap<>();      
-        for (int i = 0; i < agentCharacteristics.size(); i++) {
+        for (String charName: agentCharacteristics) {
             Integer temp[] = {0};
             try {
-                this.characteristics.put(agentCharacteristics.get(i), temp[0]);
+                this.characteristics.put(charName, temp[0]);
             } catch (Exception ex) {
                 Logger.getLogger(Agent.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -80,16 +73,14 @@ public class Agent extends Element {
     public boolean isAgent() {
         return true;
     }
-    
     public boolean isDead(){
         return dead;
     }
-    
     public void die(){
         dead = true;
         world.removeElement(posx, posy);
     }
-
+    
     @Override
     public String getName() {
         return "agent";
@@ -219,8 +210,15 @@ public class Agent extends Element {
             throw new Exception("Characteristic " + name + " doesn't exist.");
         }
     }
+    
+    private static void addNewOrgan(String name) {
+        agentOrgans.add(name);
+    }
 
     public void addOrgan(Organ o) {
+        if (!agentOrgans.contains(o.getOrganName())){
+           Agent.addNewOrgan(o.getOrganName());
+        }
         organs.add(o);
         for(Sense sensor: o.getSenses()){
             senses.add(sensor);

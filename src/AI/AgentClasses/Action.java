@@ -10,14 +10,16 @@ import AI.World;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- *
- * @author jonathan
- */
-public abstract class Action {
+public abstract class Action implements Cloneable{
 
     private HashMap<String, Integer[]> condition= new HashMap<String, Integer[]>();
     protected Agent agent;
+    
+    public Action copy() throws CloneNotSupportedException{
+        Action newaction= (Action) this.clone();
+        newaction.condition= (HashMap<String, Integer[]>) this.condition.clone();
+        return newaction;
+    }
     
     public HashMap<String, Integer[]> getCondition() {
         return condition;
@@ -31,7 +33,7 @@ public abstract class Action {
         this.agent = agent;
     }
     
-    public boolean isActionPossible(World world, int x,int y, int xnext, int ynext){
+    public boolean isActionPossible(World world, int x,int y, int xnext, int ynext) throws Exception{
         return true;
     }
     

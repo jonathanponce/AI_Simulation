@@ -146,7 +146,6 @@ public class Main {
             Eat eat= new Eat();
             eat.addCondition("food", un);
             eat.addCondition("distance", un);
-<<<<<<< HEAD
             Organ mouth = new Organ("mouth", eat);
 
             Reproduce reproduce = new Reproduce();
@@ -154,14 +153,11 @@ public class Main {
             reproduce.addCondition("agent", un);
 
             Organ sexe = new Organ("sexe", reproduce);
-
             //nouvAgent.addOrgan(sexe);
-=======
-            Organ mouth= new Organ("mouth", eat);
             
             See see = new See(6);
             Organ eyes = new Organ("eye", see);
->>>>>>> origin/master
+            
             nouvAgent.addOrgan(foot);
             nouvAgent.addOrgan(mouth);
             nouvAgent.addOrgan(eyes);

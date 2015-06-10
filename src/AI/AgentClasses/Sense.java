@@ -14,12 +14,22 @@ import java.util.HashMap;
  *
  * @author Halyna
  */
-public abstract class Sense {
+public abstract class Sense implements Cloneable{
     private HashMap<String, Integer[]> condition= new HashMap<String, Integer[]>();
     private int elementRange;
     private int variableRange;
     private boolean canSenseFood;
     private boolean canSenseAgent;
+    
+    public Sense copy() throws CloneNotSupportedException{
+        Sense newsense= (Sense) this.clone();
+        newsense.condition= (HashMap<String, Integer[]>) this.condition.clone();
+        newsense.canSenseAgent=this.canSenseAgent;
+        newsense.canSenseFood= this.canSenseFood;
+        newsense.elementRange= this.elementRange;
+        newsense.variableRange= this.variableRange;
+        return newsense;
+    }
     
     public HashMap<String, Integer[]> getCondition() {
         return condition;
