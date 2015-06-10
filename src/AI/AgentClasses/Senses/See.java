@@ -20,6 +20,7 @@ import java.util.logging.Logger;
  */
 public class See extends Sense{
 
+    int optimalLight = 50;
     public See(int range) {
         super(range, 0); // See can only SEE elements, not detect variables
     }
@@ -62,6 +63,12 @@ public class See extends Sense{
         }
         if (!obstacle)
             try {
+                int light = world.getVariable("light", squareX, squareY);
+                float random = world.getRandom();
+                float quotient = light/optimalLight;
+                if (quotient < random) {
+                    return new NonElement();
+                }                
                 return world.getElement(squareX,squareY); // no need to check through the frontiere
             } catch (Exception ex) {
                 Logger.getLogger(See.class.getName()).log(Level.SEVERE, null, ex);
@@ -106,6 +113,12 @@ public class See extends Sense{
             return new NonElement(); // we couldnt see anything because of obstacles
         else
             try {
+                int light = world.getVariable("light", squareX, squareY);
+                float random = world.getRandom();
+                float quotient = light/optimalLight;
+                if (quotient < random) {
+                   return new NonElement();
+                }                
                 return world.getElement(squareX, squareY); // no obstacles
             } 
             catch (Exception ex) {

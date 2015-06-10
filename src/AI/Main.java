@@ -7,6 +7,7 @@ package AI;
 
 import AI.AgentClasses.*;
 import AI.AgentClasses.Actions.*;
+import AI.AgentClasses.Senses.See;
 
 import java.lang.*;
 import java.util.HashMap;
@@ -56,8 +57,8 @@ public class Main {
         w.addVariable("Friction", 1);
         w.addVariable("slope", (World world,int x,int y)->{return x+y;});
         w.addVariable("temperature",(World world,long t)->{return (int)(20+10*(Math.sin(t)));});
-        w.addVariable("light",(World world,int x,int y,long t)->{return (int)(((x+y>5+5*Math.cos(t))? 1 : 0)*(50-50*(Math.cos(t))));});
-        
+        //w.addVariable("light",(World world,int x,int y,long t)->{return (int)(((x+y>5+5*Math.cos(t/6))? 1 : 0)*(50-50*(Math.cos(t/6))));});
+        w.addVariable("light",(World world,int x,int y,long t)->{return 80;});
         w.addRule((World world)->{System.out.println("start world!");return 0;});
         w.addRule((World world,long t)->{System.out.println("next turn!"); if(world.getTime()==100){world.Stop();System.out.println("end turn!");}return 0;});
         //w.addRule((World world,int x,int y)->{if(x%2==0 && y%2==0){System.out.println(x); world.setElement(new Agent(w,x,y), x, y);}return 0;});//need to detive Element// need to check agents coordinates
@@ -147,8 +148,11 @@ public class Main {
             eat.addCondition("distance", un);
             Organ mouth= new Organ("mouth", eat);
             
+            See see = new See(6);
+            Organ eyes = new Organ("eye", see);
             nouvAgent.addOrgan(foot);
             nouvAgent.addOrgan(mouth);
+            nouvAgent.addOrgan(eyes);
             w.setElement(nouvAgent, x, numAgent);
             
         }

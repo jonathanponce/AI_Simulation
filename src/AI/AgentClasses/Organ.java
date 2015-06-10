@@ -5,6 +5,7 @@
  */
 package AI.AgentClasses;
 
+import AI.AgentClasses.Senses.See;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -26,6 +27,15 @@ public class Organ {
         characteristics= new HashMap<String, Integer>();
         actions.add(a);
     }
+    
+    public Organ(String n,Sense s){
+        organName=n;
+        actions=new ArrayList();
+        sensors=new ArrayList();
+        characteristics= new HashMap<String, Integer>();
+        sensors.add(s);
+    }
+        
     public Organ(String n){
         organName=n;
         actions=new ArrayList();

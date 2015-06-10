@@ -36,7 +36,7 @@ public class Eat extends Action {
                 //System.out.print(xnext);
                 //System.out.println(ynext);
                 world.removeElement(xnext, ynext);
-                ((Agent) world.getElement(x, y)).setCharacteristic("fat", ((Agent) world.getElement(x, y)).getCharacteristic("fat") + 10);
+                agent.setCharacteristic("fat", agent.getCharacteristic("fat") + 10);
 
                 return 1;
             }
