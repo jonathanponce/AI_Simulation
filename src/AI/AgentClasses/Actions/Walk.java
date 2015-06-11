@@ -9,8 +9,6 @@ import AI.AgentClasses.Action;
 import AI.AgentClasses.Agent;
 import AI.Element;
 import AI.World;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -27,14 +25,13 @@ public class Walk extends Action {
     public int doAction(World world, int x, int y, int xnext, int ynext) {
         
         try {
-            
-            
             Element thisElement = world.getElement(x, y);
             if (thisElement == null) {
+                System.err.println("Warning: Element doesn't exist!");
+                System.out.println("Warning: Element doesn't exist!");
                 return 0;
             }
             if (x != xnext || y != ynext) {
-
                 ((Agent) thisElement).moveTo(xnext, ynext);
                 world.setElement(thisElement, xnext, ynext);
                 world.removeElement(x, y);
@@ -78,11 +75,33 @@ public class Walk extends Action {
     public void cancelAction(World world, int xprevious, int yprevious, int xnext, int ynext) throws Exception {
         
         Element thisElement = world.getElement(xnext, ynext);
+        /*System.out.print("cancelWalk :");
+        System.out.print(thisElement);
+        System.out.print(" = ");
+        System.out.print(xnext);
+        System.out.println(ynext);*/
+        if (thisElement==null){
+            System.out.print(xprevious);
+            System.out.println(yprevious);
+            Thread.sleep(1000);
+        }
         if (xprevious != xnext || yprevious != ynext) {
+            /*System.out.print("(xpre, ypre, xnext, ynext)=");
+            System.out.print(xprevious);
+            System.out.print(yprevious);
+            System.out.print(xnext);
+            System.out.println(ynext);*/
             ((Agent) thisElement).moveTo(xprevious, yprevious);
             world.setElement(thisElement, xprevious, yprevious);
             world.removeElement(xnext, ynext);
         }
     }
+
+    /*@Override
+    public Action copy() {
+        Action newaction= (Action) new Walk();
+        newaction.condition= new HashMap<String, Integer[]>(this.getCondition());
+        return newaction;
+    }*/
     
 }

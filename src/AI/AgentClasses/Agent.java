@@ -255,7 +255,18 @@ public class Agent extends Element {
                             int xprevious = this.posx;
                             int yprevious = this.posy;
                             if (current > -1000000) {
+                                /*System.out.print("first: ");
+                                System.out.print(temp);
+                                System.out.print("-- pos= ");
+                                System.out.print(this.posx);
+                                System.out.print(this.posy);
+                                System.out.print("-- target= ");
+                                System.out.print(xtarget);
+                                System.out.println(ytarget);*/
                                 temp.doAction(world, this.posx, this.posy, xtarget, ytarget);
+                                /*System.out.print("newpos= ");
+                                System.out.print(this.posx);
+                                System.out.println(this.posy);*/
                                 current = current + this.soloMax(world, this, this.getDepthMax()) / 2;
                                 if (current > bestValue) {
                                     bestActions = new ArrayList<Action>();
@@ -287,8 +298,8 @@ public class Agent extends Element {
         }
         
         int r = (int)(world.getRandom()*bestActions.size());
-        System.out.print("r= ");
-        System.out.println(r);
+        //System.out.print("r= ");
+        //System.out.println(r);
         best = bestActions.get(r);
         
         bestx = xcoord;
@@ -321,8 +332,19 @@ public class Agent extends Element {
                                     int yprevious = this.posy;
                                     int current = this.evaluationFunction(xtarget, ytarget, temp);
                                     if (current > -1000000) {
+                                        /*System.out.print(depthLeft);
+                                        System.out.print(" step: ");
+                                        System.out.print(temp);
+                                        System.out.print("---- pos= ");
+                                        System.out.print(posx);
+                                        System.out.print(posy);
+                                        System.out.print("-- target= ");
+                                        System.out.print(xtarget);
+                                        System.out.println(ytarget);*/
                                         temp.doAction(world, this.posx, this.posy, xtarget, ytarget);
                                         bestValue = Math.max(bestValue, current + this.soloMax(world, this, depthLeft - 1) / 2);
+                                        /*System.out.print("bestvalue: ");
+                                        System.out.println(bestValue);*/
                                         temp.cancelAction(world, xprevious, yprevious, xtarget, ytarget);
                                     }
                                 }
@@ -376,14 +398,15 @@ public class Agent extends Element {
 
             // For the condition about an object on this square (e.g. eat).
             if (((Integer[]) (pair.getValue())).length == 1) {
+                
                 if (((Integer[]) pair.getValue())[0] == 1) {
-                    if (world.getElement(x, y) != null && world.getElement(x, y).getName().equals(pair.getKey())) {
+                    if (world.getElement(x, y) != null && (world.getElement(x, y).getName().equals(pair.getKey()) || pair.getKey().equals("*"))) {
                         continue;
                     } else {
                         return false;
                     }
                 } else { // we have: ((Integer[])pair.getValue())[0]==0
-                    if (world.getElement(x, y) != null && world.getElement(x, y).getName().equals(pair.getKey())) {
+                    if (world.getElement(x, y) != null && (world.getElement(x, y).getName().equals(pair.getKey())|| pair.getKey().equals("*"))) {
                         return false;
                     } else {
                         continue;
@@ -402,4 +425,5 @@ public class Agent extends Element {
     public int evaluationFunction(int x, int y, Action a) throws Exception {
         return a.evaluateAction(world, posx, posy, x, y);
     }
+    
 }

@@ -88,46 +88,13 @@ public class Main {
         w.buildWorld();
         
         Integer[] zero={0};
-        Integer[] un={1};
-        Integer[] deux={2};
-        
-        /*Walk walk= new Walk();
-        walk.addCondition("distance", deux);
-        walk.addCondition("food", zero);
-        walk.addCondition("agent", zero);
-        
-        Organ foot= new Organ("foot", walk);
-        foot.addCharacteristic("size", 2);
-        
-        Walk walk1= new Walk();
-        walk1.addCondition("distance", deux);
-        walk1.addCondition("food", zero);
-        walk1.addCondition("agent", zero);
-        
-        Organ foot1= new Organ("foot", walk1);
-        foot1.addCharacteristic("size", 2);
-        
-        Eat eat= new Eat();
-        
-        eat.addCondition("food", un);
-        eat.addCondition("distance", un);
-        Organ mouth= new Organ("mouth", eat);
-        
-        Eat eat1= new Eat();
-        eat1.addCondition("food", un);
-        eat1.addCondition("distance", un);
-        Organ mouth1= new Organ("mouth", eat1);
-        
-        Reproduce reproduce= new Reproduce();
-        reproduce.addCondition("distance", un);
-        reproduce.addCondition("agent", un);
-        
-        Organ sexe= new Organ("sexe", reproduce);*/
+        Integer[] one={1};
+        Integer[] two={2};
        
         Agent.addCharacteristic("fat");
         Agent.addCharacteristic("lifePoints");
         
-        for (int numAgent=0; numAgent<2; numAgent++){
+        for (int numAgent=0; numAgent<10; numAgent++){
             float r = w.getRandom();
             int x = (int)(w.getSize()[0]*r);
             
@@ -137,23 +104,23 @@ public class Main {
             nouvAgent.setCharacteristic("lifePoints", 10);
             
             Walk walk= new Walk();
-            walk.addCondition("distance", deux);
-            walk.addCondition("food", zero);
-            walk.addCondition("agent", zero);
+            walk.addCondition("distance", two);
+            walk.addCondition("*", zero);
+            //walk.addCondition("agent", zero);
             Organ foot= new Organ("foot", walk);
             foot.addCharacteristic("size", 2);
             
             Eat eat= new Eat();
-            eat.addCondition("food", un);
-            eat.addCondition("distance", un);
+            eat.addCondition("food", one);
+            eat.addCondition("distance", one);
             Organ mouth = new Organ("mouth", eat);
 
             Reproduce reproduce = new Reproduce();
-            reproduce.addCondition("distance", un);
-            reproduce.addCondition("agent", un);
+            reproduce.addCondition("distance", one);
+            reproduce.addCondition("agent", one);
 
             Organ sexe = new Organ("sexe", reproduce);
-            //nouvAgent.addOrgan(sexe);
+            nouvAgent.addOrgan(sexe);
             
             See see = new See(6);
             Organ eyes = new Organ("eye", see);

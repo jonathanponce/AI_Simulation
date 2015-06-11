@@ -7,22 +7,17 @@ package AI.AgentClasses.Actions;
 
 import AI.AgentClasses.Action;
 import AI.AgentClasses.Agent;
-import AI.AgentClasses.Organ;
 import AI.Element;
 import AI.World;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Random;
+import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author matthieugallet
- */
 public class Reproduce extends Action {
 
-    private Agent child;
+    //private Agent child;
+    private Stack<Agent> childs= new Stack<Agent>();
 
     @Override
     public String getName() {
@@ -44,17 +39,21 @@ public class Reproduce extends Action {
 
                 int xchild = x - 1;
                 int ychild = y - 1;
-                while (world.getElement(xchild, ychild) != null) {
+                int xtarget = (xchild < 0 ? xchild + world.getSize()[0] : xchild) % world.getSize()[0];
+                int ytarget = (ychild < 0 ? ychild + world.getSize()[1] : ychild) % world.getSize()[1];
+                while (world.getElement(xtarget, ytarget) != null) {
                     xchild++;
                     if (xchild > x + 1) {
                         xchild = x - 1;
                         ychild++;
                     }
+                    xtarget = (xchild < 0 ? xchild + world.getSize()[0] : xchild) % world.getSize()[0];
+                    ytarget = (ychild < 0 ? ychild + world.getSize()[1] : ychild) % world.getSize()[1];
                     if (ychild > y + 1) {
                         return false;//no empty spaces sorrounding
                     }
                 }
-                if (((Agent) parentx).getCharacteristic("fat") <= 5 || ((Agent) parenty).getCharacteristic("fat") <= 5) {
+                if (((Agent) parentx).getCharacteristic("fat") <= 6 || ((Agent) parenty).getCharacteristic("fat") <= 6) {
                     return false;
                 }
                 return true;
@@ -72,16 +71,20 @@ public class Reproduce extends Action {
         // We first have to choose an empty space for the child.
         int xchild = x - 1;
         int ychild = y - 1;
+        int xtarget = (xchild < 0 ? xchild + world.getSize()[0] : xchild) % world.getSize()[0];
+        int ytarget = (ychild < 0 ? ychild + world.getSize()[1] : ychild) % world.getSize()[1];
         try {
             Element parentx = world.getElement(x, y);
             Element parenty = world.getElement(xnext, ynext);
 
-            while (world.getElement(xchild, ychild) != null) {
+            while (world.getElement(xtarget, ytarget) != null) {
                 xchild++;
                 if (xchild > x + 1) {
                     xchild = x - 1;
                     ychild++;
                 }
+                xtarget = (xchild < 0 ? xchild + world.getSize()[0] : xchild) % world.getSize()[0];
+                ytarget = (ychild < 0 ? ychild + world.getSize()[1] : ychild) % world.getSize()[1];
                 if (ychild > y + 1) {
                     // This case won't occur because it's already verify by the isPossibleAction.
                     return 0;//no empty spaces sorrounding
@@ -89,12 +92,13 @@ public class Reproduce extends Action {
             }
             Agent ax = (Agent) parentx;
             Agent ay = (Agent) parenty;
-            child = new Agent(world, xchild, ychild);
+            Agent child = new Agent(world, xtarget, ytarget);
+            childs.push(child);
 
             // Creation of the characteristics of the child
             for (String charName : Agent.agentCharacteristics) {
                 //System.out.println(charName + " = " + 10);
-                child.setCharacteristic(charName, 10);//maybe we should average this value?
+                child.setCharacteristic(charName, 5);//maybe we should average this value?
             }
             /*Iterator it = ax.getCharacteristics().entrySet().iterator();
              while (it.hasNext()) {
@@ -139,10 +143,17 @@ public class Reproduce extends Action {
             /*if (r.nextFloat() > 0.9) {
              child.addOrgan(new Organ("empty organ"));
              }*/
+            
+            /*System.out.print("child pos: ");
+            System.out.print(child.getPosx());
+            System.out.print(child.getPosy());
+            System.out.print("-- target= ");
+            System.out.print(xtarget);
+            System.out.println(ytarget);*/
 
-            world.setElement(child, xchild, ychild);
-            ax.setCharacteristic("fat", ((Agent) world.getElement(x, y)).getCharacteristic("fat") - 5);
-            ay.setCharacteristic("fat", ((Agent) world.getElement(xnext, ynext)).getCharacteristic("fat") - 5);
+            world.setElement(child, xtarget, ytarget);
+            ax.setCharacteristic("fat", ax.getCharacteristic("fat") - 5);
+            ay.setCharacteristic("fat", ay.getCharacteristic("fat") - 5);
             return 1;
         } catch (Exception ex) {
             Logger.getLogger(Reproduce.class.getName()).log(Level.SEVERE, null, ex);
@@ -164,7 +175,23 @@ public class Reproduce extends Action {
         /*
          * This function doesn't work. Probably because the child was modify.
          */
-        world.removeElement(child.getPosx(), child.getPosy());
+        /*System.out.print("cancelReproduce :");
+        System.out.print(world.getElement(xprevious, yprevious));
+        System.out.print(" = ");
+        System.out.print(xnext);
+        System.out.println(ynext);*/
+        if (childs.empty()) {
+            System.err.println("Warning: lifo of child empty!");
+            System.out.println("Warning: lifo of child empty!");
+        }
+        Agent child = childs.pop();
+        child.die();
+        //world.removeElement(child.getPosx(), child.getPosy());
     }
+
+    /*@Override
+    public Action copy() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }*/
 
 }

@@ -55,5 +55,10 @@ public class SharpAttack extends Action{
     public void cancelAction(World world, int xprevious, int yprevious, int xnext, int ynext) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public Action copy() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

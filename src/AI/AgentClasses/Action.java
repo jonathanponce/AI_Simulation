@@ -12,12 +12,12 @@ import java.util.HashMap;
 
 public abstract class Action implements Cloneable{
 
-    private HashMap<String, Integer[]> condition= new HashMap<String, Integer[]>();
+    public HashMap<String, Integer[]> condition= new HashMap<String, Integer[]>();
     protected Agent agent;
     
     public Action copy() throws CloneNotSupportedException{
         Action newaction= (Action) this.clone();
-        newaction.condition= (HashMap<String, Integer[]>) this.condition.clone();
+        newaction.condition= new HashMap<String, Integer[]>(this.getCondition());
         return newaction;
     }
     
@@ -37,6 +37,7 @@ public abstract class Action implements Cloneable{
         return true;
     }
     
+    //public abstract Action copy();
     public abstract String getName();
     public abstract int doAction(World world, int x,int y, int xnext, int ynext);
     public abstract void cancelAction(World world, int xprevious, int yprevious, int xnext, int ynext) throws Exception;

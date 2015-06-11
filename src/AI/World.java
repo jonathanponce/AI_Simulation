@@ -1,11 +1,9 @@
 package AI;
 
 import AI.AgentClasses.Agent;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Random;
 import javax.swing.JPanel;
 
@@ -382,7 +380,7 @@ public class World implements Cloneable{
             next();
             draw();
 
-            Thread.sleep(1000);
+            Thread.sleep(1);
         }
     }
 

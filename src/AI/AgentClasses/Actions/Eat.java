@@ -11,16 +11,12 @@ import AI.Main;
 import AI.Element;
 import AI.Food;
 import AI.World;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author matthieugallet
- */
 public class Eat extends Action {
     
-
     @Override
     public String getName() {
         return "eat";
@@ -28,7 +24,6 @@ public class Eat extends Action {
 
     @Override
     public int doAction(World world, int x, int y, int xnext, int ynext) {
-        
         try {
             //agent.senseElement(x, y)
             if (world.getElement(xnext, ynext) != null && world.getElement(xnext, ynext).getName().equals("food")) {
@@ -37,7 +32,6 @@ public class Eat extends Action {
                 //System.out.println(ynext);
                 world.removeElement(xnext, ynext);
                 ((Agent) world.getElement(x, y)).setCharacteristic("fat", ((Agent) world.getElement(x, y)).getCharacteristic("fat") + 10);
-
                 return 1;
             }
     
@@ -55,11 +49,20 @@ public class Eat extends Action {
 
     @Override
     public void cancelAction(World world, int xprevious, int yprevious, int xnext, int ynext) throws Exception{
-        //System.out.print("food");
-        //System.out.print(xnext);
-        //System.out.println(ynext);
+        /*System.out.print("cancelReproduce :");
+        System.out.print(world.getElement(xprevious, yprevious));
+        System.out.print(" = ");
+        System.out.print(xnext);
+        System.out.println(ynext);*/
         world.setElement(new Food(),xnext, ynext);
         ((Agent) world.getElement(xprevious, yprevious)).setCharacteristic("fat", ((Agent) world.getElement(xprevious, yprevious)).getCharacteristic("fat") - 10);
     }
+
+    /*@Override
+    public Action copy() {
+        Action newaction= (Action) new Eat();
+        newaction.condition= new HashMap<String, Integer[]>(this.getCondition());
+        return newaction;
+    }*/
     
 }
