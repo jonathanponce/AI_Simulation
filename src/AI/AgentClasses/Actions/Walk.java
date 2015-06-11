@@ -10,10 +10,6 @@ import AI.AgentClasses.Agent;
 import AI.Element;
 import AI.World;
 
-/**
- *
- * @author matthieugallet
- */
 public class Walk extends Action {
 
     @Override
@@ -21,9 +17,17 @@ public class Walk extends Action {
         return "walk";
     }
 
+    /**
+     * Move the agent if the start position is different to the target position.
+     * @param world
+     * @param x
+     * @param y
+     * @param xnext
+     * @param ynext
+     * @return 
+     */
     @Override
     public int doAction(World world, int x, int y, int xnext, int ynext) {
-        
         try {
             Element thisElement = world.getElement(x, y);
             if (thisElement == null) {
@@ -44,6 +48,18 @@ public class Walk extends Action {
         }
     }
 
+    /**
+     * Walking brings nothing and cost nothing to the agent.
+     * So it returns 0.
+     * It could be interesting to improve this evaluation function so that the agent has interest in exploring the world 
+     * and put small cost for each square he walks so that or agent will be as lazy as Florent :).
+     * @param world
+     * @param x
+     * @param y
+     * @param xnext
+     * @param ynext
+     * @return 0
+     */
     @Override
     public int evaluateAction(World world, int x, int y, int xnext, int ynext) {
         int res = 0;
@@ -71,6 +87,15 @@ public class Walk extends Action {
         return res;
     }
 
+    /**
+     * Move the agent back to the initial position.
+     * @param world
+     * @param xprevious
+     * @param yprevious
+     * @param xnext
+     * @param ynext
+     * @throws Exception 
+     */
     @Override
     public void cancelAction(World world, int xprevious, int yprevious, int xnext, int ynext) throws Exception {
         
@@ -95,6 +120,24 @@ public class Walk extends Action {
             world.setElement(thisElement, xprevious, yprevious);
             world.removeElement(xnext, ynext);
         }
+    }
+    
+    /**
+     * This function verifiy if there is a path from (x,y) to (xnext,ynext).
+     * It also verify if the length of this path is smaller than the distance an agent can walk in 1 turn.
+     * An agent can walk only on empty squares: cannot walk on other agent or food...
+     * @param world
+     * @param x
+     * @param y
+     * @param xnext
+     * @param ynext
+     * @return true or false if it find a correct path or not.
+     */
+    @Override
+    public boolean isActionPossible(World world, int x,int y, int xnext, int ynext){
+        //Jonathan, you have to code here!
+        
+        return true;
     }
 
     /*@Override

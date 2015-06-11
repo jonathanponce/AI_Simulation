@@ -5,14 +5,9 @@
  */
 package AI.AgentClasses;
 
-import AI.AgentClasses.Senses.See;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- *
- * @author jonathan
- */
 public class Organ {
     private String organName;
     private ArrayList<Action> actions;

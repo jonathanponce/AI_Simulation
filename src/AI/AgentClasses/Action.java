@@ -39,8 +39,37 @@ public abstract class Action implements Cloneable{
     
     //public abstract Action copy();
     public abstract String getName();
+    /**
+     * Execute the implemented action.
+     * @param world
+     * @param x
+     * @param y
+     * @param xnext
+     * @param ynext
+     * @return 
+     */
     public abstract int doAction(World world, int x,int y, int xnext, int ynext);
+    /**
+     * Undo the action. It's the reverse of the function doAction().
+     * @param world
+     * @param xprevious
+     * @param yprevious
+     * @param xnext
+     * @param ynext
+     * @throws Exception 
+     */
     public abstract void cancelAction(World world, int xprevious, int yprevious, int xnext, int ynext) throws Exception;
+    /**
+     * Evaluate the value of an action.
+     * The value of an action is what it brings to the agent (fatness, happyness,knowledge,...).
+     * @param world
+     * @param x
+     * @param y
+     * @param xnext
+     * @param ynext
+     * @return
+     * @throws Exception 
+     */
     public abstract int evaluateAction(World world, int x,int y, int xnext, int ynext) throws Exception;
     
 }

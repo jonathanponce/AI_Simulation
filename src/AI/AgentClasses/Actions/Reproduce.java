@@ -17,6 +17,9 @@ import java.util.logging.Logger;
 public class Reproduce extends Action {
 
     //private Agent child;
+    /**
+     * This stack is a LIFO: it's the list of all the children of the agent.
+     */
     private Stack<Agent> childs= new Stack<Agent>();
 
     @Override
@@ -24,6 +27,15 @@ public class Reproduce extends Action {
         return "reproduce";
     }
 
+    /**
+     * This function verify if the both parents exist, have enough fat and if there is an empty square for the child. 
+     * @param world
+     * @param x
+     * @param y
+     * @param xnext
+     * @param ynext
+     * @return true or false.
+     */
     @Override
     public boolean isActionPossible(World world, int x, int y, int xnext, int ynext) {
         if (x != xnext || y != ynext) {
@@ -66,6 +78,15 @@ public class Reproduce extends Action {
         }
     }
 
+    /**
+     * Execute the reproduction including cross the parents and create a child.
+     * @param world
+     * @param x
+     * @param y
+     * @param xnext
+     * @param ynext
+     * @return nothing important.
+     */
     @Override
     public int doAction(World world, int x, int y, int xnext, int ynext) {
         // We first have to choose an empty space for the child.
@@ -162,12 +183,30 @@ public class Reproduce extends Action {
         //return 0;
     }
 
+    /**
+     * Arbitrary evaluation. It's the happyness of the agent to have a child.
+     * @param world
+     * @param x
+     * @param y
+     * @param xnext
+     * @param ynext
+     * @return 150
+     */
     @Override
     public int evaluateAction(World world, int x, int y, int xnext, int ynext) {
         // The evaluation is an arbitrary value for now.
         return 150;
     }
 
+    /**
+     * Kill the child which is on the top of the stack and give the fat back to the parents.
+     * @param world
+     * @param xprevious
+     * @param yprevious
+     * @param xnext
+     * @param ynext
+     * @throws Exception 
+     */
     @Override
     public void cancelAction(World world, int xprevious, int yprevious, int xnext, int ynext) throws Exception {
         ((Agent) world.getElement(xprevious, yprevious)).setCharacteristic("fat", ((Agent) world.getElement(xprevious, yprevious)).getCharacteristic("fat") + 5);

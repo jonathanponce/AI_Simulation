@@ -44,11 +44,20 @@ public class Agent extends Element {
     public void setPosy(int posy) {
         this.posy = posy;
     }
+    /**
+     * Move the agent the a new position.
+     * @param xNew is x-coordinate of the new position.
+     * @param yNew is y-coordinate of the new position.
+     */
     public void moveTo(int xNew, int yNew) {
         setPosx(xNew);
         setPosy(yNew);
     }
-
+    /** Constructor of the agent class:
+     * @param w is the world in which the agent evolves
+     * @param x is his x-coordinate.
+     * @param y is his y-coordinate.
+     */
     public Agent(World w, int x, int y) {
         organs = new ArrayList<Organ>();
         senses = new ArrayList<Sense>();
@@ -76,6 +85,7 @@ public class Agent extends Element {
     public boolean isDead(){
         return dead;
     }
+    /** This function delete the agent and remove it from the world **/
     public void die(){
         dead = true;
         world.removeElement(posx, posy);
@@ -86,6 +96,12 @@ public class Agent extends Element {
         return "agent";
     }
     
+    /**
+     * Call all the sensor of the agent to test if there is an element in the specified square.
+     * @param x is the x-coordinate of the specified square.
+     * @param y is the y-coordinate of the specified square.
+     * @return the element it detects or a nonElement if it don't detect an element which exists.
+     */
     public Element senseElement(int x, int y) {
         if(sensedElement.containsKey(world.getCoordHash(x, y))){
             return sensedElement.get(world.getCoordHash(x, y));
@@ -130,6 +146,13 @@ public class Agent extends Element {
         return likelyElement;
     }
     
+    /**
+     * Call all the sensor of the agent to discover the value of a variable in the specified square.
+     * @param x is the x-coordinate of the specified square.
+     * @param y is the y-coordinate of the specified square.
+     * @param name is the name of the variable we are looking for.
+     * @return the value it detects.
+     */
     public Integer senseVariable(int x, int y, String name) {
         if(sensedVariable.containsKey(world.getCoordHash(x, y))){
             return sensedVariable.get(world.getCoordHash(x, y));
@@ -171,6 +194,10 @@ public class Agent extends Element {
         return likelyVariable;
     }
     
+    /**
+     * The agent will choose an action with his AI and execute it.
+     * @throws Exception 
+     */
     public void act() throws Exception {
         sensedElement = new HashMap<>();//reset computional memory about map
         sensedVariable = new HashMap<>(); 
@@ -192,14 +219,30 @@ public class Agent extends Element {
         }
     }
 
+    /**
+     * add a characteristic to all the agent.
+     * You have to use it before creating any agent.
+     * @param name is the name of the new characteristic.
+     */
     public static void addCharacteristic(String name) {
         agentCharacteristics.add(name);
     }
 
+    /**
+     * get the value of the characteristic.
+     * @param name is the name of the characteristic you are looking for.
+     * @return the value of the characteristic.
+     */
     public int getCharacteristic(String name) {
         return characteristics.containsKey(name) ? characteristics.get(name) : -1;
     }
 
+    /**
+     * Set the value of the characteristic.
+     * @param name is the name of the characteristic you want to update.
+     * @param value is the new value.
+     * @throws Exception 
+     */
     public void setCharacteristic(String name, int value) throws Exception {
         /* it the characteristic already exists, it modify it.
          * else it throws an exception.
@@ -211,10 +254,18 @@ public class Agent extends Element {
         }
     }
     
+    /**
+     * add a new organ to the list of existing organs.
+     * @param name the name of the new organ.
+     */
     private static void addNewOrgan(String name) {
         agentOrgans.add(name);
     }
 
+    /**
+     * add an organ to the agent.
+     * @param o is the new organ.
+     */
     public void addOrgan(Organ o) {
         if (!agentOrgans.contains(o.getOrganName())){
            Agent.addNewOrgan(o.getOrganName());
@@ -229,7 +280,12 @@ public class Agent extends Element {
         }
     }
 
-    public Action chooseAction() throws Exception {
+    /**
+     * It's the AI of the agent.
+     * @return the more interesting action for this agent.
+     * @throws Exception 
+     */
+    private Action chooseAction() throws Exception {
         //choose what to do
 
         Action best = null;
@@ -310,7 +366,16 @@ public class Agent extends Element {
         return best;
     }
 
-    public int soloMax(World w, Agent thisAgent, int depthLeft) {
+    /**
+     * AI of the agent.
+     * It's a recursive function on the depth of exploration of the tree of possible actions.
+     * It's used by the chooseAction() function.
+     * @param w the world of the agent.
+     * @param thisAgent
+     * @param depthLeft the current depth.
+     * @return the evaluation of this branch.
+     */
+    private int soloMax(World w, Agent thisAgent, int depthLeft) {
         int bestValue = -1000000;//min value
         if (depthLeft < 1) {
             return 0;
@@ -368,7 +433,16 @@ public class Agent extends Element {
         return organs;
     }
     
-    public boolean isPossibleAction(int x, int y, Action a) throws Exception {
+    /**
+     * Test if an action is possible in a target square.
+     * It will verify the conditions and call action.isActionPossible
+     * @param x x-coordinate of the target square.
+     * @param y y-coordinate of the target square.
+     * @param a the action to test.
+     * @return true if the given action is possible in the target square.
+     * @throws Exception 
+     */
+    private boolean isPossibleAction(int x, int y, Action a) throws Exception {
 
         // We first verify that this action is possible on this square.
         Iterator it = a.getCondition().entrySet().iterator();
@@ -422,7 +496,16 @@ public class Agent extends Element {
         return a.isActionPossible(world, posx, posy, x, y);
     }
 
-    public int evaluationFunction(int x, int y, Action a) throws Exception {
+    /**
+     * Evaluate the value of an action.
+     * The value of an action is what it brings to the agent (fatness, happyness,...).
+     * @param x
+     * @param y
+     * @param a
+     * @return the value of an action.
+     * @throws Exception 
+     */
+    private int evaluationFunction(int x, int y, Action a) throws Exception {
         return a.evaluateAction(world, posx, posy, x, y);
     }
     
