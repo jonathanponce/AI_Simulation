@@ -52,7 +52,7 @@ public class Main {
     
     Main() throws Exception{        
         //CODE HERE
-        World w = new World(10,10);
+        World w = new World(30,30);
         
         w.addVariable("Friction", 1);
         w.addVariable("slope", (World world,int x,int y)->{return x+y;});

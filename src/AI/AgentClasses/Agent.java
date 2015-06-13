@@ -6,6 +6,7 @@
 package AI.AgentClasses;
 
 import AI.Element;
+import AI.NonElement;
 import AI.World;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -142,7 +143,11 @@ public class Agent extends Element {
             }
         }
         sensedElement.put(world.getCoordHash(x, y), likelyElement);
-        
+        if (bestOccurrence == 0) {
+            if (likelyElement == null) {
+                likelyElement = new NonElement();
+            }
+        }
         return likelyElement;
     }
     

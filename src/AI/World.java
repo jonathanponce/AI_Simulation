@@ -380,7 +380,7 @@ public class World implements Cloneable{
             next();
             draw();
 
-            Thread.sleep(1);
+            Thread.sleep(1000);
         }
     }
 
