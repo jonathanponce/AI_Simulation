@@ -41,9 +41,8 @@ public class See extends Sense{
         int slopeX = squareX - agentX;
         int slopeY = squareY - agentY;
         int div = GCD(slopeX, slopeY);
-        if (div==0){
-            div=1;
-        }
+
+        if (div==0) div =1;
         slopeX /= div;
         slopeY /= div; // get the smallest increment possible for the vector
         boolean obstacle = false;
