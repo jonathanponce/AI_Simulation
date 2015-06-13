@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Organ {
+    /**
+     * The name of an organ identify it.
+     */
     private String organName;
     private ArrayList<Action> actions;
     private ArrayList<Sense> sensors;
@@ -77,6 +80,14 @@ public class Organ {
         }     
     }
     
+    /**
+     * Use this function to copy this organ.
+     * One organ belong two only one agent.
+     * You have two copy it (with this function) to give it to another agent.
+     * This function also copy the actions associated.
+     * @return a copy of this organ
+     * @throws CloneNotSupportedException 
+     */
     public Organ copy() throws CloneNotSupportedException{
         Organ neworgan= new Organ(this.getOrganName());
         neworgan.actions=new ArrayList();

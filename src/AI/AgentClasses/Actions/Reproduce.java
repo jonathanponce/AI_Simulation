@@ -195,7 +195,15 @@ public class Reproduce extends Action {
     @Override
     public int evaluateAction(World world, int x, int y, int xnext, int ynext) {
         // The evaluation is an arbitrary value for now.
-        return 150;
+        try {
+            Element target = ((Agent) world.getElement(x, y)).senseElement(xnext, ynext);
+            if (target != null && target.getName().equals("agent")) {
+                return 150;
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(Eat.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
     }
 
     /**
@@ -211,9 +219,7 @@ public class Reproduce extends Action {
     public void cancelAction(World world, int xprevious, int yprevious, int xnext, int ynext) throws Exception {
         ((Agent) world.getElement(xprevious, yprevious)).setCharacteristic("fat", ((Agent) world.getElement(xprevious, yprevious)).getCharacteristic("fat") + 5);
         ((Agent) world.getElement(xnext, ynext)).setCharacteristic("fat", ((Agent) world.getElement(xnext, ynext)).getCharacteristic("fat") + 5);
-        /*
-         * This function doesn't work. Probably because the child was modify.
-         */
+      
         /*System.out.print("cancelReproduce :");
         System.out.print(world.getElement(xprevious, yprevious));
         System.out.print(" = ");

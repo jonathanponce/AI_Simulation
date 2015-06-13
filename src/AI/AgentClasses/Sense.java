@@ -10,10 +10,7 @@ import AI.Main;
 import AI.World;
 import java.util.ArrayList;
 import java.util.HashMap;
-/**
- *
- * @author Halyna
- */
+
 public abstract class Sense implements Cloneable{
     private HashMap<String, Integer[]> condition= new HashMap<String, Integer[]>();
     private int elementRange;
@@ -21,9 +18,14 @@ public abstract class Sense implements Cloneable{
     private boolean canSenseFood;
     private boolean canSenseAgent;
     
+    /**
+     * Use this function to copy this sense.
+     * @return
+     * @throws CloneNotSupportedException 
+     */
     public Sense copy() throws CloneNotSupportedException{
         Sense newsense= (Sense) this.clone();
-        newsense.condition= (HashMap<String, Integer[]>) this.condition.clone();
+        newsense.condition= new HashMap<String, Integer[]>(this.getCondition());
         newsense.canSenseAgent=this.canSenseAgent;
         newsense.canSenseFood= this.canSenseFood;
         newsense.elementRange= this.elementRange;

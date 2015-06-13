@@ -16,7 +16,16 @@ import java.util.logging.Logger;
 
 public class Agent extends Element {
 
+    /**
+     * agentCharacteristics is the list of all the characteristics of the agents.
+     * All the agents have the same characterisitcs.
+     * It's impossible that one agent have different characteristics than another.
+     */
     public static ArrayList<String> agentCharacteristics = new ArrayList<String>();
+    /**
+     * agentOrgans is the list of all the names of the existing organs.
+     * We maybe have to modify it to include the range of the characteristics of this organ.
+     */
     public static ArrayList<String> agentOrgans = new ArrayList<String>();
     private HashMap<String, Integer> characteristics;
     private HashMap<Integer, Element> sensedElement;
@@ -103,9 +112,9 @@ public class Agent extends Element {
      * @return the element it detects or a nonElement if it don't detect an element which exists.
      */
     public Element senseElement(int x, int y) {
-        if(sensedElement.containsKey(world.getCoordHash(x, y))){
+        /*if(sensedElement.containsKey(world.getCoordHash(x, y))){
             return sensedElement.get(world.getCoordHash(x, y));
-        }
+        }*/
         
         HashMap<Element, Integer> detected = new HashMap<>();//number of sensor detecting an element
         
@@ -154,9 +163,9 @@ public class Agent extends Element {
      * @return the value it detects.
      */
     public Integer senseVariable(int x, int y, String name) {
-        if(sensedVariable.containsKey(world.getCoordHash(x, y))){
+        /*if(sensedVariable.containsKey(world.getCoordHash(x, y))){
             return sensedVariable.get(world.getCoordHash(x, y));
-        }
+        }*/
         
         HashMap<Integer, Integer> detected = new HashMap<>();//number of sensor detecting an element
         
@@ -306,19 +315,20 @@ public class Agent extends Element {
                     for (int l = -(limit - Math.abs(k)); l < (limit - Math.abs(k)) + 1; l++) {
                         int xtarget = (this.posx + k < 0 ? this.posx + k + world.getSize()[0] : this.posx + k) % world.getSize()[0];
                         int ytarget = (this.posy + l < 0 ? this.posy + l + world.getSize()[1] : this.posy + l) % world.getSize()[1];
+                        System.out.print("first: ");
+                        System.out.print(temp);
+                        System.out.print("-- pos= ");
+                        System.out.print(this.posx);
+                        System.out.print(this.posy);
+                        System.out.print("-- target= ");
+                        System.out.print(xtarget);
+                        System.out.println(ytarget);
                         if (this.isPossibleAction(xtarget, ytarget, temp)) {
                             int current = this.evaluationFunction(xtarget, ytarget, temp);
                             int xprevious = this.posx;
                             int yprevious = this.posy;
                             if (current > -1000000) {
-                                /*System.out.print("first: ");
-                                System.out.print(temp);
-                                System.out.print("-- pos= ");
-                                System.out.print(this.posx);
-                                System.out.print(this.posy);
-                                System.out.print("-- target= ");
-                                System.out.print(xtarget);
-                                System.out.println(ytarget);*/
+                                
                                 temp.doAction(world, this.posx, this.posy, xtarget, ytarget);
                                 /*System.out.print("newpos= ");
                                 System.out.print(this.posx);
@@ -392,20 +402,21 @@ public class Agent extends Element {
                             for (int l = -(limit - Math.abs(k)); l < (limit - Math.abs(k)) + 1; l++) {
                                 int xtarget = (this.posx + k < 0 ? this.posx + k + world.getSize()[0] : this.posx + k) % world.getSize()[0];
                                 int ytarget = (this.posy + l < 0 ? this.posy + l + world.getSize()[1] : this.posy + l) % world.getSize()[1];
+                                System.out.print(depthLeft);
+                                System.out.print(" step: ");
+                                System.out.print(temp);
+                                System.out.print("---- pos= ");
+                                System.out.print(posx);
+                                System.out.print(posy);
+                                System.out.print("-- target= ");
+                                System.out.print(xtarget);
+                                System.out.println(ytarget);
                                 if (this.isPossibleAction(xtarget, ytarget, temp)) {
                                     int xprevious = this.posx;
                                     int yprevious = this.posy;
                                     int current = this.evaluationFunction(xtarget, ytarget, temp);
                                     if (current > -1000000) {
-                                        /*System.out.print(depthLeft);
-                                        System.out.print(" step: ");
-                                        System.out.print(temp);
-                                        System.out.print("---- pos= ");
-                                        System.out.print(posx);
-                                        System.out.print(posy);
-                                        System.out.print("-- target= ");
-                                        System.out.print(xtarget);
-                                        System.out.println(ytarget);*/
+                                        
                                         temp.doAction(world, this.posx, this.posy, xtarget, ytarget);
                                         bestValue = Math.max(bestValue, current + this.soloMax(world, this, depthLeft - 1) / 2);
                                         /*System.out.print("bestvalue: ");
@@ -471,7 +482,7 @@ public class Agent extends Element {
             }
 
             // For the condition about an object on this square (e.g. eat).
-            if (((Integer[]) (pair.getValue())).length == 1) {
+            /*if (((Integer[]) (pair.getValue())).length == 1) {
                 
                 if (((Integer[]) pair.getValue())[0] == 1) {
                     if (world.getElement(x, y) != null && (world.getElement(x, y).getName().equals(pair.getKey()) || pair.getKey().equals("*"))) {
@@ -481,6 +492,32 @@ public class Agent extends Element {
                     }
                 } else { // we have: ((Integer[])pair.getValue())[0]==0
                     if (world.getElement(x, y) != null && (world.getElement(x, y).getName().equals(pair.getKey())|| pair.getKey().equals("*"))) {
+                        return false;
+                    } else {
+                        continue;
+                    }
+                }
+            }*/
+            
+            if (((Integer[]) (pair.getValue())).length == 1) {
+                Element senseEl= this.senseElement(x, y);
+                System.out.print("agent l502: ");
+                System.out.print(" (x,y)=");
+                System.out.print(x);
+                System.out.print(y);
+                System.out.print(" annoncé= ");
+                System.out.print(senseEl); 
+                System.out.print(" realité= ");
+                System.out.println(world.getElement(x, y));
+                if (((Integer[]) pair.getValue())[0] == 1) {
+                    
+                    if ( senseEl!= null && !senseEl.getName().equals("nonElement") && (senseEl.getName().equals(pair.getKey()) || pair.getKey().equals("*"))) {
+                        continue;
+                    } else {
+                        return false;
+                    }
+                } else { // we have: ((Integer[])pair.getValue())[0]==0
+                    if (senseEl != null && !senseEl.getName().equals("nonElement") && (senseEl.getName().equals(pair.getKey())|| pair.getKey().equals("*"))) {
                         return false;
                     } else {
                         continue;

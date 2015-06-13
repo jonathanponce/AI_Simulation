@@ -8,10 +8,6 @@ package AI;
 import AI.AgentClasses.*;
 import AI.AgentClasses.Actions.*;
 import AI.AgentClasses.Senses.See;
-
-import java.lang.*;
-import java.util.HashMap;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
@@ -39,7 +35,7 @@ public class Main {
     public static interface Cfunction{
         int compute(World world);
     }
-    
+    /*
     @FunctionalInterface
     public static interface Actionfunction{
         int compute(World world, int xagent,int yagent, int xobject, int yobject);
@@ -48,7 +44,7 @@ public class Main {
     public static interface Evaluatefunction{
         int compute(World world, int xagent,int yagent, int xobject, int yobject);
     }
-
+    */
     
     Main() throws Exception{        
         //CODE HERE
@@ -91,10 +87,10 @@ public class Main {
         Integer[] one={1};
         Integer[] two={2};
        
-        Agent.addCharacteristic("fat");
         Agent.addCharacteristic("lifePoints");
+        Agent.addCharacteristic("fat");
         
-        for (int numAgent=0; numAgent<10; numAgent++){
+        for (int numAgent=0; numAgent<5; numAgent++){
             float r = w.getRandom();
             int x = (int)(w.getSize()[0]*r);
             
@@ -110,6 +106,7 @@ public class Main {
             Organ foot= new Organ("foot", walk);
             foot.addCharacteristic("size", 2);
             
+            
             Eat eat= new Eat();
             eat.addCondition("food", one);
             eat.addCondition("distance", one);
@@ -120,12 +117,12 @@ public class Main {
             reproduce.addCondition("agent", one);
 
             Organ sexe = new Organ("sexe", reproduce);
-            nouvAgent.addOrgan(sexe);
+            //nouvAgent.addOrgan(sexe);
             
             See see = new See(6);
             Organ eyes = new Organ("eye", see);
             
-            nouvAgent.addOrgan(foot);
+            //nouvAgent.addOrgan(foot);
             nouvAgent.addOrgan(mouth);
             nouvAgent.addOrgan(eyes);
             w.setElement(nouvAgent, x, numAgent);
