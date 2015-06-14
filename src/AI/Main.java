@@ -48,9 +48,9 @@ public class Main {
     
     Main() throws Exception{        
         //CODE HERE
-<<<<<<< HEAD
+
         World w = new World(10,10);
-=======
+
         /*
         World w = new World(10,10);
         
@@ -122,8 +122,6 @@ public class Main {
         w.run();  
         */
         
-        World w = new World(30,30);
->>>>>>> origin/master
         
         w.addVariable("Friction", 1);
         w.addVariable("slope", (World world,int x,int y)->{return x+y;});
@@ -196,32 +194,13 @@ public class Main {
             See see = new See(6);
             Organ eyes = new Organ("eye", see);
             
-<<<<<<< HEAD
             nouvAgent.addOrgan(sexe);
-=======
->>>>>>> origin/master
             nouvAgent.addOrgan(foot);
             nouvAgent.addOrgan(mouth);
             nouvAgent.addOrgan(eyes);
             w.setElement(nouvAgent, x, numAgent);
             
         }
-        
-        //w.setElement(new Agent(w,3,3), 3, 3);
-        /*Agent agent1=new Agent(w,1,1);
-        //System.out.println(agent1.isAgent());
-        agent1.setCharacteristic("fat", 5);
-        agent1.setCharacteristic("lifePoints", 10);
-        agent1.addOrgan(foot1);
-        agent1.addOrgan(mouth1);
-        w.setElement(agent1, 1, 1);*/
-        
-        /*Agent agent2=new Agent(w,2,2);
-        agent2.setCharacteristic("fat", 20);
-        agent2.setCharacteristic("lifePoints", 10);
-        agent2.addOrgan(foot);
-        agent2.addOrgan(mouth);
-        w.setElement(agent2, 2, 2);*/
         
         //w.setElement(new Food(), 4, 4);
         //w.setElement(new Food(), 4, 5);
