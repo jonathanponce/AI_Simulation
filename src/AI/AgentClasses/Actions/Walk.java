@@ -142,9 +142,10 @@ public class Walk extends Action {
      */
     @Override
     public boolean isActionPossible(World world, int x, int y, int xnext, int ynext) {
-        //boolean val = AstarSearch(new aStarNode(x, y), world, xnext, ynext);
-        //return val;
-        return true;
+        boolean val = AstarSearch(new aStarNode(x, y), world, xnext, ynext);
+        System.out.println("val "+val+" x "+x+" y "+y+" xn "+xnext+" yn "+ynext);
+        return val;
+        //return true;
     }
 
     public boolean AstarSearch(aStarNode source, World w, int xg, int yg) {
@@ -198,6 +199,33 @@ public class Walk extends Action {
                     continue;
                 }
                 tempF = tempG + Math.abs(xg - child.x) + Math.abs(yg - child.y);//there should be a method in world returning manhattan distance
+                if(tempF>tempG+ Math.abs(xg+w.getSize()[0] - child.x) + Math.abs(yg - child.y)){
+                    tempF = tempG + Math.abs(xg+w.getSize()[0] - child.x) + Math.abs(yg - child.y);
+                }
+                if(tempF>tempG+ Math.abs(xg-w.getSize()[0] - child.x) + Math.abs(yg - child.y)){
+                    tempF = tempG + Math.abs(xg-w.getSize()[0] - child.x) + Math.abs(yg - child.y);
+                }
+                if(tempF>tempG+ Math.abs(xg - child.x) + Math.abs(yg-w.getSize()[1] - child.y)){
+                    tempF = tempG + Math.abs(xg - child.x) + Math.abs(yg-w.getSize()[1] - child.y);
+                }
+                if(tempF>tempG+ Math.abs(xg - child.x) + Math.abs(yg+w.getSize()[1] - child.y)){
+                    tempF = tempG + Math.abs(xg - child.x) + Math.abs(yg+w.getSize()[1] - child.y);
+                }
+                
+                
+                
+                if(tempF>tempG+ Math.abs(xg+w.getSize()[0] - child.x) + Math.abs(yg+w.getSize()[1] - child.y)){
+                    tempF = tempG + Math.abs(xg+w.getSize()[0] - child.x) + Math.abs(yg+w.getSize()[1] - child.y);
+                }
+                if(tempF>tempG+ Math.abs(xg-w.getSize()[0] - child.x) + Math.abs(yg+w.getSize()[1] - child.y)){
+                    tempF = tempG + Math.abs(xg-w.getSize()[0] - child.x) + Math.abs(yg +w.getSize()[1]- child.y);
+                }
+                if(tempF>tempG+ Math.abs(xg +w.getSize()[0]- child.x) + Math.abs(yg-w.getSize()[1] - child.y)){
+                    tempF = tempG + Math.abs(xg+w.getSize()[0] - child.x) + Math.abs(yg-w.getSize()[1] - child.y);
+                }
+                if(tempF>tempG+ Math.abs(xg-w.getSize()[0] - child.x) + Math.abs(yg-w.getSize()[1] - child.y)){
+                    tempF = tempG + Math.abs(xg -w.getSize()[0] - child.x) + Math.abs(yg-w.getSize()[1] - child.y);
+                }
                 if ((!queue.contains(child)) || (tempF < child.fValue)) {// if child node is not in queue or newer fValue is lower
                     child.parent = current;
                     child.gValue = tempG;
@@ -255,9 +283,9 @@ public class Walk extends Action {
             if (xg == x && yg == y) {
                 return true;
             }
-            x = (x < 0 ? x + w.getSize()[0] : x) % w.getSize()[0];
-            y = (y < 0 ? y + w.getSize()[1] : y) % w.getSize()[1];
-            if (xg == x && yg == y) {
+            int xt = (x < 0 ? x + w.getSize()[0] : x) % w.getSize()[0];
+            int yt = (y < 0 ? y + w.getSize()[1] : y) % w.getSize()[1];
+            if (xg == xt && yg == yt) {
                 return true;
             }
             return false;

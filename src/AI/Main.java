@@ -91,11 +91,11 @@ public class Main {
         Agent.addCharacteristic("fat");
         Agent.addCharacteristic("lifePoints");
         
-        for (int numAgent=0; numAgent<2; numAgent++){
+        for (int numAgent=0; numAgent<1; numAgent++){
             float r = w.getRandom();
             int x = (int)(w.getSize()[0]*r);
             
-            Agent nouvAgent=new Agent(w,numAgent,x);
+            Agent nouvAgent=new Agent(w,8,8);
             nouvAgent.setCharacteristic("fat", 10000);
             nouvAgent.setCharacteristic("lifePoints", 10);
             
@@ -123,10 +123,10 @@ public class Main {
             Organ eyes = new Organ("eye", see);
             
             nouvAgent.addOrgan(sexe);
-            nouvAgent.addOrgan(mouth);
+            //nouvAgent.addOrgan(mouth);
             nouvAgent.addOrgan(foot);
             nouvAgent.addOrgan(eyes);
-            w.setElement(nouvAgent,numAgent,x);
+            w.setElement(nouvAgent,8,8);
             
         }
         
