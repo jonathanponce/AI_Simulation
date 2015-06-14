@@ -417,6 +417,7 @@ public class World implements Cloneable{
     }
 
     public void draw() {
+        System.out.println("Draw");
         //jpanel.remove(canvas);
         //canvas = new MyCanvas(jpanel.getWidth(), jpanel.getHeight(),size[0],size[1]);// JPanel not accessible ... /!\
         //jframe.setVisible(true);
@@ -432,8 +433,12 @@ public class World implements Cloneable{
                     if (s.getElement().isAgent()) {
                         canvas.setObject(x, y, 100, 100, 100, 3);
                     } else {
+                        if(s.getElement().getName().equals("obstacle")){
+                            canvas.setObject(x, y, 200, 100, 100, 2);//TODO color attribute for Element
+                        }else{
                         canvas.setObject(x, y, 200, 100, 100, 1);//TODO color attribute for Element
-                    }
+                         }
+                       }
                     //setObjectInfo(int posx, int posy, String info) TODO no info for now
                 }
                 else{
