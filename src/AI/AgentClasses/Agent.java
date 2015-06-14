@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,6 +37,7 @@ public class Agent extends Element {
     private ArrayList<Action> actions;
     private World world;
     private int bestx, besty;
+    private HashMap<Agent, Stack<Integer>> evaluationMemory;
     private int posx, posy;
     private boolean dead;
 
@@ -129,7 +131,7 @@ public class Agent extends Element {
             
             if(distance2<elementRange2){
                 Element e = sensor.senseElement(world, posx, posy, x, y);
-                if(e != null && e.getName() == "nonElement"){
+                if(e != null && e.getName().equals("nonElement")){
                     e = null;
                 }
                 
@@ -216,7 +218,7 @@ public class Agent extends Element {
         sensedElement = new HashMap<>();//reset computional memory about map
         sensedVariable = new HashMap<>(); 
        
-        Action toDo = chooseAction();
+        Action toDo = chooseActionMaxMax();
         
         //System.out.println(toDo);
         if (toDo != null) {
@@ -294,12 +296,123 @@ public class Agent extends Element {
         }
     }
 
+    
+    public HashMap<String, Integer> getCharacteristics() {
+        return characteristics;
+    }
+
+    public ArrayList<Organ> getOrgans() {
+        return organs;
+    }
+    
+    /**
+     * Test if an action is possible in a target square.
+     * It will verify the conditions and call action.isActionPossible
+     * @param x x-coordinate of the target square.
+     * @param y y-coordinate of the target square.
+     * @param a the action to test.
+     * @return true if the given action is possible in the target square.
+     * @throws Exception 
+     */
+    private boolean isPossibleAction(int x, int y, Action a) throws Exception {
+
+        // We first verify that this action is possible on this square.
+        Iterator it = a.getCondition().entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry) it.next();
+            // if the condition is about a max distance (e.g. movement)
+            if (pair.getKey().equals("distance")) {
+                int xdist = Math.min(Math.abs(x - posx), Math.abs(posx + world.getSize()[0] - x));
+                // x-posx<0 ? x-posx+world.getSize()[0] : x-posx;
+                int ydist = Math.min(Math.abs(y - posy), Math.abs(posy + world.getSize()[1] - y));
+                //y-posy<0 ? y-posy+world.getSize()[1] : y-posy;
+                if (((Integer[]) (pair.getValue()))[0] >= xdist + ydist) {
+                    continue;
+                } else {
+                    return false;
+                }
+            }
+            // For the conditions on the terrain (e.g. max temperature).
+            if (((Integer[]) (pair.getValue())).length == 2) {
+                if (world.getVariable((String) pair.getKey(), x, y) >= ((Integer[]) pair.getValue())[0]
+                        && world.getVariable((String) pair.getKey(), x, y) <= ((Integer[]) pair.getValue())[1]) {
+                    continue;
+                } else {
+                    return false;
+                }
+            }
+
+            // For the condition about an object on this square (e.g. eat).
+            if (((Integer[]) (pair.getValue())).length == 1) {
+                
+                if (((Integer[]) pair.getValue())[0] == 1) {
+                    if (world.getElement(x, y) != null && (world.getElement(x, y).getName().equals(pair.getKey()) || pair.getKey().equals("*"))) {
+                        continue;
+                    } else {
+                        return false;
+                    }
+                } else { // we have: ((Integer[])pair.getValue())[0]==0
+                    if (world.getElement(x, y) != null && (world.getElement(x, y).getName().equals(pair.getKey())|| pair.getKey().equals("*"))) {
+                        return false;
+                    } else {
+                        continue;
+                    }
+                }
+            }
+            
+            /*if (((Integer[]) (pair.getValue())).length == 1) {
+                Element senseEl= this.senseElement(x, y);
+                System.out.print("agent l502: ");
+                System.out.print(" (x,y)=");
+                System.out.print(x);
+                System.out.print(y);
+                System.out.print(" annoncé= ");
+                System.out.print(senseEl); 
+                System.out.print(" realité= ");
+                System.out.println(world.getElement(x, y));
+                if (((Integer[]) pair.getValue())[0] == 1) {
+                    
+                    if ( senseEl!= null && !senseEl.getName().equals("nonElement") && (senseEl.getName().equals(pair.getKey()) || pair.getKey().equals("*"))) {
+                        continue;
+                    } else {
+                        return false;
+                    }
+                } else { // we have: ((Integer[])pair.getValue())[0]==0
+                    if (senseEl != null && !senseEl.getName().equals("nonElement") && (senseEl.getName().equals(pair.getKey())|| pair.getKey().equals("*"))) {
+                        return false;
+                    } else {
+                        continue;
+                    }
+                }
+            }*/
+
+            //System.out.println(pair.getKey() + " = " + pair.getValue());
+            it.remove(); // avoids a ConcurrentModificationException
+            return false;
+        }
+
+        return a.isActionPossible(world, posx, posy, x, y);
+    }
+
+    /**
+     * Evaluate the value of an action.
+     * The value of an action is what it brings to the agent (fatness, happyness,...).
+     * @param x
+     * @param y
+     * @param a
+     * @return the value of an action.
+     * @throws Exception 
+     */
+    private int evaluationFunction(int x, int y, Action a) throws Exception {
+        return a.evaluateAction(world, posx, posy, x, y);
+    }
+    
     /**
      * It's the AI of the agent.
      * @return the more interesting action for this agent.
      * @throws Exception 
      */
-    private Action chooseAction() throws Exception {
+    private Action chooseActionMaxMax() throws Exception {
         //choose what to do
 
         Action best = null;
@@ -318,16 +431,16 @@ public class Agent extends Element {
                 }
                 for (int k = -limit; k < limit + 1; k++) {
                     for (int l = -(limit - Math.abs(k)); l < (limit - Math.abs(k)) + 1; l++) {
-                        int xtarget = (this.posx + k < 0 ? this.posx + k + world.getSize()[0] : this.posx + k) % world.getSize()[0];
-                        int ytarget = (this.posy + l < 0 ? this.posy + l + world.getSize()[1] : this.posy + l) % world.getSize()[1];
-                        System.out.print("first: ");
+                        int xtarget = world.toToricCoord(this.posx + k, 0);
+                        int ytarget = world.toToricCoord(this.posx + l, 1);
+                        /*System.out.print("first: ");
                         System.out.print(temp);
                         System.out.print("-- pos= ");
                         System.out.print(this.posx);
                         System.out.print(this.posy);
                         System.out.print("-- target= ");
                         System.out.print(xtarget);
-                        System.out.println(ytarget);
+                        System.out.println(ytarget);*/
                         if (this.isPossibleAction(xtarget, ytarget, temp)) {
                             int current = this.evaluationFunction(xtarget, ytarget, temp);
                             int xprevious = this.posx;
@@ -405,9 +518,9 @@ public class Agent extends Element {
                         }
                         for (int k = -limit; k < limit + 1; k++) {
                             for (int l = -(limit - Math.abs(k)); l < (limit - Math.abs(k)) + 1; l++) {
-                                int xtarget = (this.posx + k < 0 ? this.posx + k + world.getSize()[0] : this.posx + k) % world.getSize()[0];
-                                int ytarget = (this.posy + l < 0 ? this.posy + l + world.getSize()[1] : this.posy + l) % world.getSize()[1];
-                                System.out.print(depthLeft);
+                                int xtarget = world.toToricCoord(this.posx + k, 0);
+                                int ytarget = world.toToricCoord(this.posx + l, 1);
+                                /*System.out.print(depthLeft);
                                 System.out.print(" step: ");
                                 System.out.print(temp);
                                 System.out.print("---- pos= ");
@@ -415,7 +528,7 @@ public class Agent extends Element {
                                 System.out.print(posy);
                                 System.out.print("-- target= ");
                                 System.out.print(xtarget);
-                                System.out.println(ytarget);
+                                System.out.println(ytarget);*/
                                 if (this.isPossibleAction(xtarget, ytarget, temp)) {
                                     int xprevious = this.posx;
                                     int yprevious = this.posy;
@@ -440,115 +553,160 @@ public class Agent extends Element {
         }
         return bestValue;
     }
+    
+    private Action chooseActionMinMax() throws Exception {
+        //choose what to do
 
-    public HashMap<String, Integer> getCharacteristics() {
-        return characteristics;
-    }
-
-    public ArrayList<Organ> getOrgans() {
-        return organs;
+        Action best = null;
+        ArrayList<Action> bestActions = new ArrayList<>();
+        ArrayList<Integer> bestxs = new ArrayList<>();
+        ArrayList<Integer> bestys = new ArrayList<>();
+                
+        HashMap<Integer, Agent> seenAgent= new HashMap<Integer, Agent>();
+        seenAgent.put(0, this);
+        int index=1;
+        for (Agent newagent: world.getAgents()){
+            if (newagent != this && this.senseElement(newagent.posx, newagent.posy)!=null && this.senseElement(newagent.posx, newagent.posy).isAgent()) {
+                seenAgent.put(index, newagent);
+                index++;
+            }
+        }
+        
+        int bestValue = -1000000;
+        for (Organ currentOrgan : organs) {
+            for (Action currentAction : currentOrgan.getActions()) {
+                int limit = 0;
+                if (currentAction.getCondition().get("distance") != null) {
+                    limit = currentAction.getCondition().get("distance")[0];
+                }
+                for (int k = -limit; k < limit + 1; k++) {
+                    for (int l = -(limit - Math.abs(k)); l < (limit - Math.abs(k)) + 1; l++) {
+                        int xtarget = world.toToricCoord(this.posx + k,0);
+                        int ytarget = world.toToricCoord(this.posx + l,1);
+                        /*System.out.print("first: ");
+                        System.out.print(currentAction);
+                        System.out.print("-- pos= ");
+                        System.out.print(this.posx);
+                        System.out.print(this.posy);
+                        System.out.print("-- target= ");
+                        System.out.print(xtarget);
+                        System.out.println(ytarget);*/
+                        if (this.isPossibleAction(xtarget, ytarget, currentAction)) {
+                            int current = this.evaluationFunction(xtarget, ytarget, currentAction);
+                            int xprevious = this.posx;
+                            int yprevious = this.posy;
+                            if (current > -1000000) {
+                                currentAction.doAction(world, this.posx, this.posy, xtarget, ytarget);
+                                this.evaluationMemory=new HashMap<Agent, Stack<Integer>>();
+                                int next= seenAgent.size()==1 ? 0 : 1; 
+                                HashMap<Agent, Integer> branchresult=this.chooseConcurrent(world, seenAgent, next, this.getDepthMax());
+                                int add= branchresult.get(this)==null ? 0 : branchresult.get(this);
+                                current = current + add / 2;
+                                if (current > bestValue) {
+                                    bestActions = new ArrayList<Action>();
+                                    bestActions.add(currentAction);
+                                    bestValue = current;
+                                    bestxs = new ArrayList<Integer>();
+                                    bestxs.add(xtarget);
+                                    bestys = new ArrayList<Integer>();
+                                    bestys.add(ytarget);
+                                } else if (current == bestValue) {
+                                    bestxs.add(xtarget);
+                                    bestys.add(ytarget);
+                                    bestActions.add(currentAction);
+                                }
+                                currentAction.cancelAction(world, xprevious, yprevious, xtarget, ytarget);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        if (bestActions.size()==0){
+            //In this case no actions are possible.
+            return null;
+        }
+        
+        int r = (int)(world.getRandom()*bestActions.size());
+        best = bestActions.get(r);
+        bestx = bestxs.get(r);
+        besty = bestys.get(r);
+        return best;
     }
     
-    /**
-     * Test if an action is possible in a target square.
-     * It will verify the conditions and call action.isActionPossible
-     * @param x x-coordinate of the target square.
-     * @param y y-coordinate of the target square.
-     * @param a the action to test.
-     * @return true if the given action is possible in the target square.
-     * @throws Exception 
-     */
-    private boolean isPossibleAction(int x, int y, Action a) throws Exception {
-
-        // We first verify that this action is possible on this square.
-        Iterator it = a.getCondition().entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry) it.next();
-            // if the condition is about a max distance (e.g. movement)
-            if (pair.getKey().equals("distance")) {
-                int xdist = Math.min(Math.abs(x - posx), Math.abs(posx + world.getSize()[0] - x));
-                // x-posx<0 ? x-posx+world.getSize()[0] : x-posx;
-                int ydist = Math.min(Math.abs(y - posy), Math.abs(posy + world.getSize()[1] - y));
-                //y-posy<0 ? y-posy+world.getSize()[1] : y-posy;
-                if (((Integer[]) (pair.getValue()))[0] >= xdist + ydist) {
-                    continue;
-                } else {
-                    return false;
-                }
-            }
-            // For the conditions on the terrain (e.g. max temperature).
-            if (((Integer[]) (pair.getValue())).length == 2) {
-                if (world.getVariable((String) pair.getKey(), x, y) >= ((Integer[]) pair.getValue())[0]
-                        && world.getVariable((String) pair.getKey(), x, y) <= ((Integer[]) pair.getValue())[1]) {
-                    continue;
-                } else {
-                    return false;
-                }
-            }
-
-            // For the condition about an object on this square (e.g. eat).
-            /*if (((Integer[]) (pair.getValue())).length == 1) {
-                
-                if (((Integer[]) pair.getValue())[0] == 1) {
-                    if (world.getElement(x, y) != null && (world.getElement(x, y).getName().equals(pair.getKey()) || pair.getKey().equals("*"))) {
-                        continue;
-                    } else {
-                        return false;
+    private HashMap<Agent, Integer> chooseConcurrent(World w, HashMap<Integer, Agent> order, int currentagentnum, int depthLeft) throws Exception {
+        if (currentagentnum == 0) {
+            depthLeft = depthLeft - 1;
+        }
+        if (depthLeft < 1) {
+            return new HashMap<Agent, Integer>();
+        } else {
+            HashMap<Agent, Integer> res = new HashMap<Agent, Integer>();
+            Agent currentAgent = order.get(currentagentnum);
+            /*System.out.print("Agent l643, currentagent= ");
+            System.out.print(currentAgent);
+            System.out.print(" currentagentnum= ");
+            System.out.print(currentagentnum);
+            System.out.print(" order.size= ");
+            System.out.println(order.size());*/
+            //res.put(currentAgent, -1000000);
+            int bestValue = -1000000;
+            if (!currentAgent.isDead()) {
+            for (Organ currentOrgan : organs) {
+                for (Action currentAction : currentOrgan.getActions()) {
+                    int limit = 0;
+                    if (currentAction.getCondition().get("distance") != null) {
+                        limit = currentAction.getCondition().get("distance")[0];
                     }
-                } else { // we have: ((Integer[])pair.getValue())[0]==0
-                    if (world.getElement(x, y) != null && (world.getElement(x, y).getName().equals(pair.getKey())|| pair.getKey().equals("*"))) {
-                        return false;
-                    } else {
-                        continue;
-                    }
-                }
-            }*/
-            
-            if (((Integer[]) (pair.getValue())).length == 1) {
-                Element senseEl= this.senseElement(x, y);
-                System.out.print("agent l502: ");
-                System.out.print(" (x,y)=");
-                System.out.print(x);
-                System.out.print(y);
-                System.out.print(" annoncé= ");
-                System.out.print(senseEl); 
-                System.out.print(" realité= ");
-                System.out.println(world.getElement(x, y));
-                if (((Integer[]) pair.getValue())[0] == 1) {
-                    
-                    if ( senseEl!= null && !senseEl.getName().equals("nonElement") && (senseEl.getName().equals(pair.getKey()) || pair.getKey().equals("*"))) {
-                        continue;
-                    } else {
-                        return false;
-                    }
-                } else { // we have: ((Integer[])pair.getValue())[0]==0
-                    if (senseEl != null && !senseEl.getName().equals("nonElement") && (senseEl.getName().equals(pair.getKey())|| pair.getKey().equals("*"))) {
-                        return false;
-                    } else {
-                        continue;
+                    for (int k = -limit; k < limit + 1; k++) {
+                        for (int l = -(limit - Math.abs(k)); l < (limit - Math.abs(k)) + 1; l++) {
+                            int xtarget = world.toToricCoord(currentAgent.posx + k, 0);
+                            int ytarget = world.toToricCoord(currentAgent.posx + l, 1);
+                            /*System.out.print("first: ");
+                             System.out.print(currentAction);
+                             System.out.print("-- pos= ");
+                             System.out.print(currentAgent.posx);
+                             System.out.print(currentAgent.posy);
+                             System.out.print("-- target= ");
+                             System.out.print(xtarget);
+                             System.out.println(ytarget);*/
+                            if (currentAgent.isPossibleAction(xtarget, ytarget, currentAction)) {
+                                int current = currentAgent.evaluationFunction(xtarget, ytarget, currentAction);
+                                int xprevious = currentAgent.posx;
+                                int yprevious = currentAgent.posy;
+                                if (current > -1000000) {
+                                    currentAction.doAction(world, currentAgent.posx, currentAgent.posy, xtarget, ytarget);
+                                            //res.put(currentAgent, Math.max(res.get(currentAgent), current + this.chooseSolo(world, currentAgent, depthLeft - 1) / 2));
+                                            /*System.out.print("bestvalue: ");
+                                     System.out.println(bestValue);*/
+                                    HashMap<Agent, Integer> branchresult = this.chooseConcurrent(world, order, (currentagentnum + 1) % order.size(), depthLeft);
+                                    /*System.out.print("Agent l681: branchresult= ");
+                                    System.out.print(branchresult);
+                                    System.out.print("current= ");
+                                    System.out.println(current);*/
+                                    int add= branchresult.get(currentAgent)==null ? 0 : branchresult.get(currentAgent);
+                                    current = current + add / 2;
+                                    if (current > bestValue) {
+                                        
+                                        bestValue = current;
+                                        res.putAll(branchresult);
+                                        res.put(currentAgent, current);
+                                    }
+                                    currentAction.cancelAction(world, xprevious, yprevious, xtarget, ytarget);
+                                }
+                            }
+                        }
                     }
                 }
             }
-
-            //System.out.println(pair.getKey() + " = " + pair.getValue());
-            it.remove(); // avoids a ConcurrentModificationException
-            return false;
+            }
+            /*System.out.print("Agent l698: res= ");
+            System.out.println(res);*/
+            return res;
         }
 
-        return a.isActionPossible(world, posx, posy, x, y);
-    }
-
-    /**
-     * Evaluate the value of an action.
-     * The value of an action is what it brings to the agent (fatness, happyness,...).
-     * @param x
-     * @param y
-     * @param a
-     * @return the value of an action.
-     * @throws Exception 
-     */
-    private int evaluationFunction(int x, int y, Action a) throws Exception {
-        return a.evaluateAction(world, posx, posy, x, y);
     }
     
+ 
 }

@@ -44,7 +44,7 @@ public class Eat extends Action {
 
     @Override
     public int evaluateAction(World world, int x, int y, int xnext, int ynext) {
-        /*try {
+        try {
             Element target = ((Agent) world.getElement(x, y)).senseElement(xnext, ynext);
             if (target != null && target.getName().equals("food")) {
                 return 100;
@@ -53,17 +53,17 @@ public class Eat extends Action {
             Logger.getLogger(Eat.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        return 0;*/
-        return 100;
+        return 0;
+        //return 100;
     }
 
     @Override
     public void cancelAction(World world, int xprevious, int yprevious, int xnext, int ynext) throws Exception{
-        System.out.print("cancelEat :");
+        /*System.out.print("cancelEat :");
         System.out.print(world.getElement(xprevious, yprevious));
         System.out.print(" = ");
         System.out.print(xnext);
-        System.out.println(ynext);
+        System.out.println(ynext);*/
         world.setElement(new Food(),xnext, ynext);
         ((Agent) world.getElement(xprevious, yprevious)).setCharacteristic("fat", ((Agent) world.getElement(xprevious, yprevious)).getCharacteristic("fat") - 10);
     }

@@ -48,7 +48,7 @@ public class Main {
     
     Main() throws Exception{        
         //CODE HERE
-        World w = new World(30,30);
+        World w = new World(10,10);
         
         w.addVariable("Friction", 1);
         w.addVariable("slope", (World world,int x,int y)->{return x+y;});
@@ -74,7 +74,7 @@ public class Main {
                 int mapSize = world.getSize()[0]*world.getSize()[1];
 
                 //System.out.println(5.0/mapSize);
-                if(world.getRandom()<5.0/mapSize){
+                if(world.getRandom()<1){//5.0/mapSize){
                     world.setElement(new Food(), x, y);
                 }
             }
@@ -117,12 +117,12 @@ public class Main {
             reproduce.addCondition("agent", one);
 
             Organ sexe = new Organ("sexe", reproduce);
-            //nouvAgent.addOrgan(sexe);
-            
+
             See see = new See(6);
             Organ eyes = new Organ("eye", see);
             
-            //nouvAgent.addOrgan(foot);
+            nouvAgent.addOrgan(sexe);
+            nouvAgent.addOrgan(foot);
             nouvAgent.addOrgan(mouth);
             nouvAgent.addOrgan(eyes);
             w.setElement(nouvAgent, x, numAgent);

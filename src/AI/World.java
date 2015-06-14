@@ -1,6 +1,7 @@
 package AI;
 
 import AI.AgentClasses.Agent;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,6 +38,10 @@ public class World implements Cloneable{
     private List<Main.Cfunction> WRule;
 
     private List<Agent> agents;
+
+    public List<Agent> getAgents() {
+        return agents;
+    }
 
     private long time;
     private boolean end;
@@ -380,7 +385,7 @@ public class World implements Cloneable{
             next();
             draw();
 
-            Thread.sleep(5000);
+            Thread.sleep(1000);
         }
     }
 
@@ -452,5 +457,26 @@ public class World implements Cloneable{
     }
     public World copy() throws CloneNotSupportedException{
         return (World) this.clone();
+    }
+    
+    /**
+     * Put the given value in the limit of the world.
+     * @param value is the actual value of the coordinate.
+     * @param coord is the axe you are dealing with.
+     * @return the coord between 0 and world.size.
+     */
+    public int toToricCoord(int value, int coord){
+        while (value<0){
+            value+=this.getSize()[coord];
+        }
+        while (value>=this.getSize()[coord]){
+            value-=this.getSize()[coord];
+        }
+        return value;
+        
+        /*
+        int xtarget = (this.posx + k < 0 ? this.posx + k + world.getSize()[0] : this.posx + k) % world.getSize()[0];
+        int ytarget = (this.posy + l < 0 ? this.posy + l + world.getSize()[1] : this.posy + l) % world.getSize()[1];
+        */
     }
 }
