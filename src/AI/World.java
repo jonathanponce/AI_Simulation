@@ -381,6 +381,7 @@ public class World implements Cloneable{
     }
 
     public void run() throws Exception {
+        draw();
         while (!end) {
             next();
             draw();

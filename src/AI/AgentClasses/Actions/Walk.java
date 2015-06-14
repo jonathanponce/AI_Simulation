@@ -141,13 +141,13 @@ public class Walk extends Action {
      * @return true or false if it find a correct path or not.
      */
     @Override
-    public boolean isActionPossible(World world, int x,int y, int xnext, int ynext){
-        //Jonathan, you have to code here!
-       boolean val=AstarSearch(new aStarNode(x,y),world,xnext,ynext);
-        return val;
-       
+    public boolean isActionPossible(World world, int x, int y, int xnext, int ynext) {
+        //boolean val = AstarSearch(new aStarNode(x, y), world, xnext, ynext);
+        //return val;
+        return true;
     }
-public boolean AstarSearch(aStarNode source,World w, int xg,int yg) {
+
+    public boolean AstarSearch(aStarNode source, World w, int xg, int yg) {
         Set<aStarNode> explored = new HashSet<aStarNode>();
         PriorityQueue<aStarNode> queue = new PriorityQueue<aStarNode>(11, new Comparator<aStarNode>() {
             //override compare method
@@ -166,40 +166,38 @@ public boolean AstarSearch(aStarNode source,World w, int xg,int yg) {
         source.gValue = 0;
         queue.add(source);
         boolean found = false;
-        double cost,tempG,tempF,h;
-       ArrayList<aStarNode> childs;
+        double cost, tempG, tempF, h;
+        ArrayList<aStarNode> childs;
         while ((!queue.isEmpty()) && (!found)) {
             aStarNode current = queue.poll();
-            if(current.fValue>this.getCondition().get("distance")[0]){//need to know the limit of walking
-            return false;
+            if (current.fValue > this.getCondition().get("distance")[0]) {//need to know the limit of walking
+                return false;
             }
             explored.add(current);
-           childs = getChild(w,current.x,current.y);
-            if (current.isGoal(w,xg,yg)) {//found solution
-                 found = true;
-                 /*System.out.println("PATH");
-                        while (current.x != source.x && current.y != source.y) {
+            childs = getChild(w, current.x, current.y);
+            if (current.isGoal(w, xg, yg)) {//found solution
+                found = true;
+                /*System.out.println("PATH");
+                 while (current.x != source.x && current.y != source.y) {
                             
                             
-                            System.out.println("x "+current.x+" y "+current.y);
-                            current = current.parent;
-                        }
-                        System.out.println("END PATH");
+                 System.out.println("x "+current.x+" y "+current.y);
+                 current = current.parent;
+                 }
+                 System.out.println("END PATH");
                  */
-                 return true;
+                return true;
             }
             //check every child of current node
             for (int i = 0; i < childs.size(); i++) {
-                aStarNode child=childs.get(i) ;
-                
-                
+                aStarNode child = childs.get(i);
+
                 tempG = current.gValue + 1;
-               
-                
-                if((explored.contains(child))){
-                       continue;
+
+                if ((explored.contains(child))) {
+                    continue;
                 }
-                tempF = tempG+Math.abs(xg-child.x)+Math.abs(yg-child.y);//there should be a method in world returning manhattan distance
+                tempF = tempG + Math.abs(xg - child.x) + Math.abs(yg - child.y);//there should be a method in world returning manhattan distance
                 if ((!queue.contains(child)) || (tempF < child.fValue)) {// if child node is not in queue or newer fValue is lower
                     child.parent = current;
                     child.gValue = tempG;
@@ -212,61 +210,65 @@ public boolean AstarSearch(aStarNode source,World w, int xg,int yg) {
         }
         return false;
     }
-public ArrayList<aStarNode> getChild(World w,int x,int y){
-ArrayList<aStarNode> child=new ArrayList<aStarNode>();
+
+    public ArrayList<aStarNode> getChild(World w, int x, int y) {
+        ArrayList<aStarNode> child = new ArrayList<aStarNode>();
         try {
-            if(w.getElement(x-1, y)==null){//world should take into consideration the limits
-                child.add(new aStarNode(x-1,y));
-            }  
-            if(w.getElement(x, y-1)==null){
-                child.add(new aStarNode(x,y-1));
-            }  
-            if(w.getElement(x+1, y)==null){
-                child.add(new aStarNode(x+1,y));
-            }  
-            if(w.getElement(x, y+1)==null){
-                child.add(new aStarNode(x,y+1));
-            }  
+            if (w.getElement(x - 1, y) == null) {//world should take into consideration the limits
+                child.add(new aStarNode(x - 1, y));
+            }
+            if (w.getElement(x, y - 1) == null) {
+                child.add(new aStarNode(x, y - 1));
+            }
+            if (w.getElement(x + 1, y) == null) {
+                child.add(new aStarNode(x + 1, y));
+            }
+            if (w.getElement(x, y + 1) == null) {
+                child.add(new aStarNode(x, y + 1));
+            }
         } catch (Exception ex) {
             Logger.getLogger(Walk.class.getName()).log(Level.SEVERE, null, ex);
         }
-return child;
-}
-
-class aStarNode {
-
-    public double vertex;
-    public double gValue;//cost from start to here
-    public double hValue;//heuristic cost from here to goal
-    public double fValue = 0;//total cost
-    public aStarNode parent;
-    public int x,y;
-
-    public aStarNode(int xi,int xy) {
-        x = xi;
-       y= xy;
-        
+        return child;
     }
-    public double getVertex(){
-        return vertex;
-    }
-public boolean isGoal(World w,int xg,int yg){
-    if(xg==x && yg==y)
-        return true;
-    x = (x < 0 ? x+w.getSize()[0] : x)%w.getSize()[0];
-    y = (y < 0 ? y+w.getSize()[1] : y)%w.getSize()[1];
-    if(xg==x && yg==y)
-        return true;
-    return false;
-}
 
-}
+    class aStarNode {
+
+        public double vertex;
+        public double gValue;//cost from start to here
+        public double hValue;//heuristic cost from here to goal
+        public double fValue = 0;//total cost
+        public aStarNode parent;
+        public int x, y;
+
+        public aStarNode(int xi, int xy) {
+            x = xi;
+            y = xy;
+
+        }
+
+        public double getVertex() {
+            return vertex;
+        }
+
+        public boolean isGoal(World w, int xg, int yg) {
+            if (xg == x && yg == y) {
+                return true;
+            }
+            x = (x < 0 ? x + w.getSize()[0] : x) % w.getSize()[0];
+            y = (y < 0 ? y + w.getSize()[1] : y) % w.getSize()[1];
+            if (xg == x && yg == y) {
+                return true;
+            }
+            return false;
+        }
+
+    }
 
     /*@Override
-    public Action copy() {
-        Action newaction= (Action) new Walk();
-        newaction.condition= new HashMap<String, Integer[]>(this.getCondition());
-        return newaction;
-    }*/
-    
+     public Action copy() {
+     Action newaction= (Action) new Walk();
+     newaction.condition= new HashMap<String, Integer[]>(this.getCondition());
+     return newaction;
+     }*/
 }

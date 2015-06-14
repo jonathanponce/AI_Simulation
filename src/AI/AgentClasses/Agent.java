@@ -322,7 +322,8 @@ public class Agent extends Element {
             Map.Entry pair = (Map.Entry) it.next();
             // if the condition is about a max distance (e.g. movement)
             if (pair.getKey().equals("distance")) {
-                int xdist = Math.min(Math.abs(x - posx), Math.abs(posx + world.getSize()[0] - x));
+                continue;
+                /*int xdist = Math.min(Math.abs(x - posx), Math.abs(posx + world.getSize()[0] - x));
                 // x-posx<0 ? x-posx+world.getSize()[0] : x-posx;
                 int ydist = Math.min(Math.abs(y - posy), Math.abs(posy + world.getSize()[1] - y));
                 //y-posy<0 ? y-posy+world.getSize()[1] : y-posy;
@@ -330,7 +331,7 @@ public class Agent extends Element {
                     continue;
                 } else {
                     return false;
-                }
+                }*/
             }
             // For the conditions on the terrain (e.g. max temperature).
             if (((Integer[]) (pair.getValue())).length == 2) {
@@ -424,39 +425,44 @@ public class Agent extends Element {
         int xcoord = -1, ycoord = -1;
         for (int organNum = 0; organNum < organs.size(); organNum++) {
             for (int actionNum = 0; actionNum < organs.get(organNum).getActions().size(); actionNum++) {
-                Action temp = organs.get(organNum).getActions().get(actionNum);
+                Action currentAction = organs.get(organNum).getActions().get(actionNum);
                 int limit = 0;
-                if (temp.getCondition().get("distance") != null) {
-                    limit = temp.getCondition().get("distance")[0];
+                if (currentAction.getCondition().get("distance") != null) {
+                    limit = currentAction.getCondition().get("distance")[0];
                 }
                 for (int k = -limit; k < limit + 1; k++) {
                     for (int l = -(limit - Math.abs(k)); l < (limit - Math.abs(k)) + 1; l++) {
-                        int xtarget = world.toToricCoord(this.posx + k, 0);
-                        int ytarget = world.toToricCoord(this.posx + l, 1);
                         /*System.out.print("first: ");
-                        System.out.print(temp);
-                        System.out.print("-- pos= ");
-                        System.out.print(this.posx);
-                        System.out.print(this.posy);
-                        System.out.print("-- target= ");
-                        System.out.print(xtarget);
-                        System.out.println(ytarget);*/
-                        if (this.isPossibleAction(xtarget, ytarget, temp)) {
-                            int current = this.evaluationFunction(xtarget, ytarget, temp);
+                        System.out.print(k);
+                        System.out.println(l);*/
+                        int xtarget = world.toToricCoord(this.posx + k, 0);
+                        int ytarget = world.toToricCoord(this.posy + l, 1);
+                        
+                        if (this.isPossibleAction(xtarget, ytarget, currentAction)) {
+                            int current = this.evaluationFunction(xtarget, ytarget, currentAction);
+                            System.out.print("first: ");
+                            System.out.print(currentAction.getName());
+                            System.out.print(k);
+                            System.out.print(l);
+                            System.out.print("-- pos= ");
+                            System.out.print(this.posx);
+                            System.out.print(this.posy);
+                            System.out.print("-- target= ");
+                            System.out.print(xtarget);
+                            System.out.println(ytarget);
                             int xprevious = this.posx;
                             int yprevious = this.posy;
                             if (current > -1000000) {
-                                
-                                temp.doAction(world, this.posx, this.posy, xtarget, ytarget);
+                                currentAction.doAction(world, this.posx, this.posy, xtarget, ytarget);
                                 /*System.out.print("newpos= ");
                                 System.out.print(this.posx);
                                 System.out.println(this.posy);*/
                                 current = current + this.soloMax(world, this, this.getDepthMax()) / 2;
                                 if (current > bestValue) {
                                     bestActions = new ArrayList<Action>();
-                                    bestActions.add(temp);
+                                    bestActions.add(currentAction);
                                     bestValue = current;
-                                    best = temp;
+                                    best = currentAction;
                                     xcoord = xtarget;
                                     ycoord = ytarget;
                                     bestxs = new ArrayList<Integer>();
@@ -466,9 +472,9 @@ public class Agent extends Element {
                                 } else if (current == bestValue) {
                                     bestxs.add(xtarget);
                                     bestys.add(ytarget);
-                                    bestActions.add(temp);
+                                    bestActions.add(currentAction);
                                 }
-                                temp.cancelAction(world, xprevious, yprevious, xtarget, ytarget);
+                                currentAction.cancelAction(world, xprevious, yprevious, xtarget, ytarget);
                             }
                         }
                     }
@@ -511,35 +517,35 @@ public class Agent extends Element {
             try {
                 for (int organNum = 0; organNum < thisAgent.organs.size(); organNum++) {
                     for (int actionNum = 0; actionNum < thisAgent.organs.get(organNum).getActions().size(); actionNum++) {
-                        Action temp = thisAgent.organs.get(organNum).getActions().get(actionNum);
+                        Action currentAction = thisAgent.organs.get(organNum).getActions().get(actionNum);
                         int limit = 0;
-                        if (temp.getCondition().get("distance") != null) {
-                            limit = temp.getCondition().get("distance")[0];
+                        if (currentAction.getCondition().get("distance") != null) {
+                            limit = currentAction.getCondition().get("distance")[0];
                         }
                         for (int k = -limit; k < limit + 1; k++) {
                             for (int l = -(limit - Math.abs(k)); l < (limit - Math.abs(k)) + 1; l++) {
                                 int xtarget = world.toToricCoord(this.posx + k, 0);
-                                int ytarget = world.toToricCoord(this.posx + l, 1);
-                                /*System.out.print(depthLeft);
-                                System.out.print(" step: ");
-                                System.out.print(temp);
-                                System.out.print("---- pos= ");
-                                System.out.print(posx);
-                                System.out.print(posy);
-                                System.out.print("-- target= ");
-                                System.out.print(xtarget);
-                                System.out.println(ytarget);*/
-                                if (this.isPossibleAction(xtarget, ytarget, temp)) {
+                                int ytarget = world.toToricCoord(this.posy + l, 1);
+                                if (this.isPossibleAction(xtarget, ytarget, currentAction)) {
+                                    System.out.print(depthLeft);
+                                    System.out.print(" step: ");
+                                    System.out.print(currentAction.getName());
+                                    System.out.print("---- pos= ");
+                                    System.out.print(posx);
+                                    System.out.print(posy);
+                                    System.out.print("-- target= ");
+                                    System.out.print(xtarget);
+                                    System.out.println(ytarget);
                                     int xprevious = this.posx;
                                     int yprevious = this.posy;
-                                    int current = this.evaluationFunction(xtarget, ytarget, temp);
+                                    int current = this.evaluationFunction(xtarget, ytarget, currentAction);
                                     if (current > -1000000) {
                                         
-                                        temp.doAction(world, this.posx, this.posy, xtarget, ytarget);
+                                        currentAction.doAction(world, this.posx, this.posy, xtarget, ytarget);
                                         bestValue = Math.max(bestValue, current + this.soloMax(world, this, depthLeft - 1) / 2);
                                         /*System.out.print("bestvalue: ");
                                         System.out.println(bestValue);*/
-                                        temp.cancelAction(world, xprevious, yprevious, xtarget, ytarget);
+                                        currentAction.cancelAction(world, xprevious, yprevious, xtarget, ytarget);
                                     }
                                 }
                             }
