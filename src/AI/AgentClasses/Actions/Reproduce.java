@@ -144,13 +144,14 @@ public class Reproduce extends Action {
                         flag = true;
                         seen[j] = true;
                         if (r.nextFloat() > 0.1) {
-                            child.addOrgan(ax.getOrgans().get(i).copy());
+                           child.addOrgan(ax.getOrgans().get(i).combine(ay.getOrgans().get(j)));
+                        
                         }
                     }
                 }
                 if (flag == false) {
                     if (r.nextFloat() > 0.5) {
-                        child.addOrgan(ax.getOrgans().get(i).copy());
+                        child.addOrgan(ax.getOrgans().get(i).combine(null));
                     }
                 } else {
                     flag = false;
@@ -158,7 +159,7 @@ public class Reproduce extends Action {
             }
             for (int i = 0; i < ay.getOrgans().size(); i++) {
                 if (seen[i] == false && r.nextFloat() > 0.5) {
-                    child.addOrgan(ay.getOrgans().get(i).copy());
+                    child.addOrgan(ay.getOrgans().get(i).combine(null));
                 }
             }
             /*if (r.nextFloat() > 0.9) {

@@ -7,6 +7,8 @@ package AI.AgentClasses;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class Organ {
     /**
@@ -88,6 +90,57 @@ public class Organ {
      * @return a copy of this organ
      * @throws CloneNotSupportedException 
      */
+      public Organ combine(Organ par)throws CloneNotSupportedException{
+        Organ neworgan= new Organ(this.getOrganName());
+         neworgan.actions=new ArrayList();
+         for(Action a: this.getActions()){
+            neworgan.addAction(a.combine(par));
+        }
+        neworgan.sensors=new ArrayList();
+        for(Sense s: this.getSenses()){
+            neworgan.addSens(s.combine(par));
+        }
+        neworgan.characteristics= this.combineCharacteristics(par);
+        
+        return neworgan;
+    }
+    
+    
+    public HashMap<String, Integer> combineCharacteristics(Organ par) throws CloneNotSupportedException {
+
+        HashMap<String, Integer> temp = (HashMap<String, Integer>) this.characteristics.clone();
+        Iterator it = temp.entrySet().iterator();
+        if (par == null) {
+            while (it.hasNext()) {
+                Map.Entry pair = (Map.Entry) it.next();
+                int tempValue =(int) (temp.get(pair.getKey()) * (0.95 + 0.1 * Math.random()));//a little mutation
+                
+                temp.put(pair.getKey().toString(), tempValue);
+                it.remove(); // avoids a ConcurrentModificationException
+            }
+            return temp;
+        }
+       
+       
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry) it.next();
+            int tempValue = (int) Math.round(triangular((temp.get(pair.getKey())-1), par.getCharacteristic(pair.getKey().toString())+1,  ((temp.get(pair.getKey()) + par.getCharacteristic(pair.getKey().toString())) / 2)));
+            
+            temp.put(pair.getKey().toString(), tempValue);
+            it.remove(); // avoids a ConcurrentModificationException
+        }
+        return temp;
+    }
+
+    public double triangular(double a, double b, double c) {
+        double U = Math.random() / (double) 1.0;
+        double F = (c - a) / (b - a);
+        if (U <= F) {
+            return a + Math.sqrt(U * (b - a) * (c - a));
+        } else {
+            return b - Math.sqrt((1 - U) * (b - a) * (b - c));
+        }
+    }
     public Organ copy() throws CloneNotSupportedException{
         Organ neworgan= new Organ(this.getOrganName());
         neworgan.actions=new ArrayList();

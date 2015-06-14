@@ -54,6 +54,7 @@ class MyCanvas extends JPanel implements ActionListener {
     private Image ground;
     private Image food;
     private Image agentImage;
+    private Image obstacleImage;
 
     public void adjust(int ww, int hh) {
         this.w = (int) (ww);
@@ -114,6 +115,7 @@ class MyCanvas extends JPanel implements ActionListener {
             ground=ImageIO.read(new File("ground.jpg"));
             food=ImageIO.read(new File("broccoli.png"));
             agentImage=ImageIO.read(new File("agent.png"));
+            obstacleImage=ImageIO.read(new File("obstacle.png"));
         } catch (IOException ex) {
             Logger.getLogger(MyCanvas.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -181,8 +183,9 @@ class MyCanvas extends JPanel implements ActionListener {
                             g2.drawImage(food, tempX, tempY,size,size, this);
                             break;
                         case 2:
-                            g2.fill(new Arc2D.Double(tempX, tempY, size/2, size/2, 0, 360, Arc2D.PIE));
-                            g2.fill(new Arc2D.Double(tempX+size/2, tempY+size/2, size/2, size/2, 0, 360, Arc2D.PIE));
+                            //g2.fill(new Arc2D.Double(tempX, tempY, size/2, size/2, 0, 360, Arc2D.PIE));
+                            //g2.fill(new Arc2D.Double(tempX+size/2, tempY+size/2, size/2, size/2, 0, 360, Arc2D.PIE));
+                           g2.drawImage(obstacleImage, tempX, tempY,size,size, this);
                             break;
                         case 3:
                             g2.drawImage(agentImage, tempX, tempY,size,size, this);
