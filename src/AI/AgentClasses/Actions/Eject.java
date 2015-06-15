@@ -19,6 +19,7 @@ public class Eject extends Action{
     private int actionRadius;
     public Eject(Organ a){
             organ=a;
+            organ.addAction(this);
     }
     
     public Eject(int actionRadius) {

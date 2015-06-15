@@ -21,6 +21,7 @@ public class SharpAttack extends Action{
     public SharpAttack(int damage,Organ a) {
         this.damage = damage;
         organ=a;
+        organ.addAction(this);
     }
     
     @Override

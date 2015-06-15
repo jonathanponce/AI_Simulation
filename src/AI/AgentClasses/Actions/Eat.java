@@ -22,6 +22,7 @@ public class Eat extends Action {
             this.addCondition("food", new Integer[]{1});
             this.addCondition("distance", new Integer[]{1});
             organ=a;
+            organ.addAction(this);
     }
     @Override
     public String getName() {

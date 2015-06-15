@@ -22,6 +22,7 @@ public class senseSlope extends Sense{
     public senseSlope(int elementRange, int variableRange,Organ a) {
         super(0, variableRange);// can only sense a variable
         organ=a;
+        organ.addSens(this);
     }
 
     @Override

@@ -24,6 +24,7 @@ public class Infrared extends Sense{
     public Infrared(int range,Organ a) {
         super(0, range); // ELEMENTS ONLY
         organ=a;
+        organ.addSens(this);
     }
 
     @Override

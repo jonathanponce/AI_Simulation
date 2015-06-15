@@ -24,6 +24,7 @@ public class Taste extends Sense {
     public Taste(Organ a) {
         super(1,0); // can only taste around him (food elements)
         organ=a;
+        organ.addSens(this);
     }
 
     @Override

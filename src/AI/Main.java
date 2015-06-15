@@ -107,22 +107,22 @@ public class Main {
             Organ foot= new Organ("foot");
             foot.addCharacteristic("size",2);
             Walk walk= new Walk(foot);
-            foot.addAction(walk);
+            //foot.addAction(walk); no need!
             
             
             
             Organ mouth = new Organ("mouth");
             Eat eat= new Eat(mouth);
-            mouth.addAction(eat);
+            //mouth.addAction(eat);
             
             Organ sexe = new Organ("sexe");
             Reproduce reproduce = new Reproduce(sexe);
-            sexe.addAction(reproduce);
+            //sexe.addAction(reproduce);
             
             Organ eyes = new Organ("eye");
             eyes.addCharacteristic("range", 6);
             See see = new See(eyes);
-            eyes.addSens(see);
+           // eyes.addSens(see);
              
             
             nouvAgent.addOrgan(sexe);

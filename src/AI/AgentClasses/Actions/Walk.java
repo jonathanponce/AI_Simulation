@@ -29,6 +29,7 @@ public class Walk extends Action {
         organ=a;
         this.addCondition("distance",new Integer[]{ a.getCharacteristic("size")});
         this.addCondition("*", new Integer[]{0});
+        organ.addAction(this);
     }
 
     /**

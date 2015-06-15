@@ -35,6 +35,7 @@ public class Reproduce extends Action {
         this.addCondition("distance", new Integer[]{1});
         this.addCondition("agent", new Integer[]{1});
         organ = a;
+        organ.addAction(this);
     }
 
     /**

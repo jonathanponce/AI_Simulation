@@ -24,6 +24,7 @@ public class feelTemperature extends Sense{
     public feelTemperature(Organ a) {
         super(0, 1); // can only feel the temperature in the square around him. cannot sense elements
         organ=a;
+        organ.addSens(this);
     }
 
     @Override

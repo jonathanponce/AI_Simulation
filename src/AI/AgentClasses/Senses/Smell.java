@@ -26,6 +26,7 @@ public class Smell extends Sense {
     public Smell(int range,Organ a) {
         super(range, 0);
         organ=a;
+        organ.addSens(this);
     }
 
     @Override

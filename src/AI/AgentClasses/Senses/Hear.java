@@ -24,6 +24,7 @@ public class Hear extends Sense{
     public Hear(int range,Organ a) {
         super(range, 0); // ELEMENTS ONLY
         organ=a;
+        organ.addSens(this);
     }
 
     @Override

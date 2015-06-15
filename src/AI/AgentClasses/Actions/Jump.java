@@ -24,6 +24,7 @@ public class Jump extends Action {
     }
     public Jump(Organ a){
             organ=a;
+            organ.addAction(this);
     }
 
     @Override

@@ -25,6 +25,7 @@ public class See extends Sense{
     public See(Organ a) {
         super(a.getCharacteristic("range"), 0); // See can only SEE elements, not detect variables
         organ=a; 
+        organ.addSens(this);
     }
 
     @Override
