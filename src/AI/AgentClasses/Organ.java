@@ -27,6 +27,10 @@ public class Organ {
         characteristics= new HashMap<String, Integer>();
         actions.add(a);
     }
+
+    public HashMap<String, Integer> getCharacteristics() {
+        return characteristics;
+    }
     
     public Organ(String n,Sense s){
         organName=n;
@@ -93,23 +97,42 @@ public class Organ {
       public Organ combine(Organ par)throws CloneNotSupportedException{
         Organ neworgan= new Organ(this.getOrganName());
          neworgan.actions=new ArrayList();
+         neworgan.setCharacteristics(new HashMap<String, Integer>());
+         Iterator it = ((HashMap<String, Integer>)(this.getCharacteristics().clone())).entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            System.out.println(pair.getKey() + " = " + pair.getValue());
+            neworgan.setCharacteristic(pair.getKey().toString(), (int)pair.getValue());
+            it.remove(); // avoids a ConcurrentModificationException
+        }
+         
+         combineCharacteristics(par,neworgan.getCharacteristics());
          for(Action a: this.getActions()){
-            neworgan.addAction(a.combine(par));
+           // neworgan.addAction(a.combine(par));
+             Action tempAction=a.copy();
+             tempAction.setOrgan(neworgan);
+              neworgan.addAction(tempAction);
         }
         neworgan.sensors=new ArrayList();
         for(Sense s: this.getSenses()){
-            neworgan.addSens(s.combine(par));
+            Sense tempSense=s.copy();
+             tempSense.setOrgan(neworgan);
+              neworgan.addSens(tempSense);
         }
-        neworgan.characteristics= this.combineCharacteristics(par);
+        
         
         return neworgan;
     }
-    
-    
-    public HashMap<String, Integer> combineCharacteristics(Organ par) throws CloneNotSupportedException {
 
-        HashMap<String, Integer> temp = (HashMap<String, Integer>) this.characteristics.clone();
-        Iterator it = temp.entrySet().iterator();
+    public void setCharacteristics(HashMap<String, Integer> characteristics) {
+        this.characteristics = characteristics;
+    }
+    
+    
+    public void combineCharacteristics(Organ par,HashMap<String, Integer> temp) throws CloneNotSupportedException {
+
+        //HashMap<String, Integer> temp = (HashMap<String, Integer>) this.characteristics.clone();
+        Iterator it = ((HashMap<String, Integer>)(temp.clone())).entrySet().iterator();
         if (par == null) {
             while (it.hasNext()) {
                 Map.Entry pair = (Map.Entry) it.next();
@@ -118,7 +141,7 @@ public class Organ {
                 temp.put(pair.getKey().toString(), tempValue);
                 it.remove(); // avoids a ConcurrentModificationException
             }
-            return temp;
+            return;
         }
        
        
@@ -129,7 +152,7 @@ public class Organ {
             temp.put(pair.getKey().toString(), tempValue);
             it.remove(); // avoids a ConcurrentModificationException
         }
-        return temp;
+        return ;
     }
 
     public double triangular(double a, double b, double c) {

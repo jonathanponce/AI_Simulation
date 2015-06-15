@@ -7,6 +7,7 @@ package AI.AgentClasses.Senses;
 
 import AI.AgentClasses.Sense;
 import AI.AgentClasses.Agent;
+import AI.AgentClasses.Organ;
 import AI.Main;
 import AI.Element;
 import AI.NonElement;
@@ -20,8 +21,9 @@ import java.util.logging.Logger;
  */
 public class feelTemperature extends Sense{
 
-    public feelTemperature() {
+    public feelTemperature(Organ a) {
         super(0, 1); // can only feel the temperature in the square around him. cannot sense elements
+        organ=a;
     }
 
     @Override

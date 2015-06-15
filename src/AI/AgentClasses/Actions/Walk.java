@@ -7,6 +7,7 @@ package AI.AgentClasses.Actions;
 
 import AI.AgentClasses.Action;
 import AI.AgentClasses.Agent;
+import AI.AgentClasses.Organ;
 import AI.Element;
 import AI.World;
 import java.util.ArrayList;
@@ -19,9 +20,15 @@ import java.util.logging.Logger;
 
 public class Walk extends Action {
 
+    private Organ organ;
     @Override
     public String getName() {
         return "walk";
+    }
+    public Walk(Organ a){
+        organ=a;
+        this.addCondition("distance",new Integer[]{ a.getCharacteristic("size")});
+        this.addCondition("*", new Integer[]{0});
     }
 
     /**
@@ -143,7 +150,7 @@ public class Walk extends Action {
     @Override
     public boolean isActionPossible(World world, int x, int y, int xnext, int ynext) {
         boolean val = AstarSearch(new aStarNode(x, y), world, xnext, ynext);
-        System.out.println("val "+val+" x "+x+" y "+y+" xn "+xnext+" yn "+ynext);
+        //System.out.println("val "+val+" x "+x+" y "+y+" xn "+xnext+" yn "+ynext);
         return val;
         //return true;
     }
@@ -171,7 +178,7 @@ public class Walk extends Action {
         ArrayList<aStarNode> childs;
         while ((!queue.isEmpty()) && (!found)) {
             aStarNode current = queue.poll();
-            if (current.fValue > this.getCondition().get("distance")[0]) {//need to know the limit of walking
+            if (current.fValue > organ.getCharacteristic("size")) {//need to know the limit of walking
                 return false;
             }
             explored.add(current);

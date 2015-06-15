@@ -7,6 +7,7 @@ package AI.AgentClasses.Senses;
 
 import AI.AgentClasses.Sense;
 import AI.AgentClasses.Agent;
+import AI.AgentClasses.Organ;
 import AI.Main;
 import AI.Element;
 import AI.Food;
@@ -22,8 +23,9 @@ import java.util.Random;
  */
 public class Smell extends Sense {
 
-    public Smell(int range) {
+    public Smell(int range,Organ a) {
         super(range, 0);
+        organ=a;
     }
 
     @Override

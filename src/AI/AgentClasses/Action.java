@@ -16,11 +16,15 @@ public abstract class Action implements Cloneable{
 
     public HashMap<String, Integer[]> condition= new HashMap<String, Integer[]>();
     protected Agent agent;
+    public Organ organ;
     
     public Action copy() throws CloneNotSupportedException{
         Action newaction= (Action) this.clone();
         newaction.condition= new HashMap<String, Integer[]>(this.getCondition());
         return newaction;
+    }
+    public void setOrgan(Organ a){
+        organ=a;
     }
     public Action combine(Organ par) throws CloneNotSupportedException {
         Action newaction = (Action) this.clone();

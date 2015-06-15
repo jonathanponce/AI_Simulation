@@ -6,6 +6,7 @@
 package AI.AgentClasses.Actions;
 import AI.AgentClasses.Action;
 import AI.AgentClasses.Agent;
+import AI.AgentClasses.Organ;
 import AI.Element;
 import AI.Square;
 import AI.World;
@@ -16,6 +17,9 @@ import AI.World;
 public class Eject extends Action{
 
     private int actionRadius;
+    public Eject(Organ a){
+            organ=a;
+    }
     
     public Eject(int actionRadius) {
         this.actionRadius = actionRadius;

@@ -7,6 +7,7 @@ package AI.AgentClasses.Senses;
 
 import AI.AgentClasses.Sense;
 import AI.AgentClasses.Agent;
+import AI.AgentClasses.Organ;
 import AI.Main;
 import AI.Element;
 import AI.NonElement;
@@ -20,8 +21,9 @@ import java.util.logging.Logger;
  */
 public class Infrared extends Sense{
 
-    public Infrared(int range) {
+    public Infrared(int range,Organ a) {
         super(0, range); // ELEMENTS ONLY
+        organ=a;
     }
 
     @Override

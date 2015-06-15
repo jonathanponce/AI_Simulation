@@ -7,6 +7,7 @@ package AI.AgentClasses.Actions;
 
 import AI.AgentClasses.Action;
 import AI.AgentClasses.Agent;
+import AI.AgentClasses.Organ;
 import AI.Main;
 import AI.Element;
 import AI.Food;
@@ -17,6 +18,11 @@ import java.util.logging.Logger;
 
 public class Eat extends Action {
     
+    public Eat(Organ a){
+            this.addCondition("food", new Integer[]{1});
+            this.addCondition("distance", new Integer[]{1});
+            organ=a;
+    }
     @Override
     public String getName() {
         return "eat";

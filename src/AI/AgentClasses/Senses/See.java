@@ -7,6 +7,7 @@ package AI.AgentClasses.Senses;
 
 import AI.AgentClasses.Sense;
 import AI.AgentClasses.Agent;
+import AI.AgentClasses.Organ;
 import AI.Main;
 import AI.Element;
 import AI.NonElement;
@@ -21,8 +22,9 @@ import java.util.logging.Logger;
 public class See extends Sense{
 
     int optimalLight = 50;
-    public See(int range) {
-        super(range, 0); // See can only SEE elements, not detect variables
+    public See(Organ a) {
+        super(a.getCharacteristic("range"), 0); // See can only SEE elements, not detect variables
+        organ=a; 
     }
 
     @Override

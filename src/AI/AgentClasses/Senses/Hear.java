@@ -7,6 +7,7 @@ package AI.AgentClasses.Senses;
 
 import AI.AgentClasses.Sense;
 import AI.AgentClasses.Agent;
+import AI.AgentClasses.Organ;
 import AI.Main;
 import AI.Element;
 import AI.NonElement;
@@ -20,8 +21,9 @@ import java.util.logging.Logger;
  */
 public class Hear extends Sense{
 
-    public Hear(int range) {
+    public Hear(int range,Organ a) {
         super(range, 0); // ELEMENTS ONLY
+        organ=a;
     }
 
     @Override
