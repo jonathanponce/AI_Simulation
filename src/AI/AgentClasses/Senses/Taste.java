@@ -7,6 +7,7 @@ package AI.AgentClasses.Senses;
 
 import AI.AgentClasses.Sense;
 import AI.AgentClasses.Agent;
+import AI.AgentClasses.Organ;
 import AI.Main;
 import AI.Element;
 import AI.NonElement;
@@ -20,8 +21,10 @@ import java.util.logging.Logger;
  */
 public class Taste extends Sense {
 
-    public Taste() {
+    public Taste(Organ a) {
         super(1,0); // can only taste around him (food elements)
+        organ=a;
+        organ.addSens(this);
     }
 
     @Override

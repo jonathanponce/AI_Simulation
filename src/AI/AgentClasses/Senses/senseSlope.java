@@ -5,6 +5,7 @@
  */
 package AI.AgentClasses.Senses;
 
+import AI.AgentClasses.Organ;
 import AI.AgentClasses.Sense;
 import AI.Element;
 import AI.NonElement;
@@ -18,8 +19,10 @@ import java.util.logging.Logger;
  */
 public class senseSlope extends Sense{
 
-    public senseSlope(int elementRange, int variableRange) {
+    public senseSlope(int elementRange, int variableRange,Organ a) {
         super(0, variableRange);// can only sense a variable
+        organ=a;
+        organ.addSens(this);
     }
 
     @Override

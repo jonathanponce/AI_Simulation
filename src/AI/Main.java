@@ -125,35 +125,54 @@ public class Main {
             float r = w.getRandom();
             int x = (int)(w.getSize()[0]*r);
             
+
             //Agent nouvAgent=new Agent(w,numAgent,x);
             Agent nouvAgent=new Agent(w,x,numAgent);
             nouvAgent.setCharacteristic("fat", 100);
+
+            //Agent nouvAgent=new Agent(w,4*numAgent,4*numAgent);
+            //nouvAgent.setCharacteristic("fat", 10000);
+
             nouvAgent.setCharacteristic("lifePoints", 10);
             
-            Walk walk= new Walk();
+            
             for (int i = 0; i < 100; i++) {
                // System.out.println("traingular "+walk.triangular(4, 6, 5));
             }
             
-            Organ foot= new Organ("foot", walk);
+
+            //Organ foot= new Organ("foot", walk);
             //foot.addCharacteristic("size", 2);
             //walk.addCondition("distance", foot.getCharacteristic("size"));
-            walk.addCondition("distance", one);
-            walk.addCondition("*", zero);
-            foot.addCharacteristic("size", walk.getCondition().get("distance")[0]);
+            //walk.addCondition("distance", one);
+            //walk.addCondition("*", zero);
+            //foot.addCharacteristic("size", walk.getCondition().get("distance")[0]);
 
-            Eat eat= new Eat();
-            eat.addCondition("food", one);
-            eat.addCondition("distance", one);
-            Organ mouth = new Organ("mouth", eat);
+            //Eat eat= new Eat();
+            //eat.addCondition("food", one);
+            //eat.addCondition("distance", one);
+            //Organ mouth = new Organ("mouth", eat);
+
+            Organ foot= new Organ("foot");
+            foot.addCharacteristic("size",2);
+            Walk walk= new Walk(foot);
+            //foot.addAction(walk); no need!
             
-            Reproduce reproduce = new Reproduce();
-            reproduce.addCondition("distance", one);
-            reproduce.addCondition("agent", one);
-            Organ sexe = new Organ("sexe", reproduce);
             
-            See see = new See(6);
-            Organ eyes = new Organ("eye", see);
+            
+            Organ mouth = new Organ("mouth");
+            Eat eat= new Eat(mouth);
+            //mouth.addAction(eat);
+            
+            Organ sexe = new Organ("sexe");
+            Reproduce reproduce = new Reproduce(sexe);
+            //sexe.addAction(reproduce);
+            
+            Organ eyes = new Organ("eye");
+            eyes.addCharacteristic("range", 6);
+            See see = new See(eyes);
+           // eyes.addSens(see);
+             
             
             nouvAgent.addOrgan(sexe);
             nouvAgent.addOrgan(mouth);
@@ -165,6 +184,12 @@ public class Main {
         
         /*w.setElement(new Food(), 1, 1);
         w.setElement(new Food(), 5, 5);
+            w.setElement(nouvAgent,4*numAgent,4*numAgent);
+            
+        }
+        
+        //w.setElement(new Food(), 1, 1);
+        //w.setElement(new Food(), 3, 3);
         
         w.setElement(new Obstacle(), 3, 3);
         w.setElement(new Obstacle(), 7, 3);

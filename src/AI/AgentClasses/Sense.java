@@ -19,12 +19,16 @@ public abstract class Sense implements Cloneable{
     private int variableRange;
     private boolean canSenseFood;
     private boolean canSenseAgent;
+    public Organ organ;
     
     /**
      * Use this function to copy this sense.
      * @return
      * @throws CloneNotSupportedException 
      */
+    public void setOrgan(Organ a){
+        organ=a;
+       }
     public Sense copy() throws CloneNotSupportedException{
         Sense newsense= (Sense) this.clone();
         newsense.condition= new HashMap<String, Integer[]>(this.getCondition());

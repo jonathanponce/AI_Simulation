@@ -7,6 +7,7 @@ package AI.AgentClasses.Actions;
 
 import AI.AgentClasses.Action;
 import AI.AgentClasses.Agent;
+import AI.AgentClasses.Organ;
 import AI.Element;
 import AI.World;
 
@@ -20,6 +21,10 @@ public class Jump extends Action {
     @Override
     public String getName() {
         return "fly";
+    }
+    public Jump(Organ a){
+            organ=a;
+            organ.addAction(this);
     }
 
     @Override

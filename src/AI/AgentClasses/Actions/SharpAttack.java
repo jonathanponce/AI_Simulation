@@ -7,6 +7,7 @@ package AI.AgentClasses.Actions;
 
 import AI.AgentClasses.Action;
 import AI.AgentClasses.Agent;
+import AI.AgentClasses.Organ;
 import AI.Element;
 import AI.World;
 /**
@@ -17,8 +18,10 @@ public class SharpAttack extends Action{
     
     private int damage;
     
-    public SharpAttack(int damage) {
+    public SharpAttack(int damage,Organ a) {
         this.damage = damage;
+        organ=a;
+        organ.addAction(this);
     }
     
     @Override

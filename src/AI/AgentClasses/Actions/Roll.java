@@ -6,6 +6,7 @@
 package AI.AgentClasses.Actions;
 import AI.AgentClasses.Action;
 import AI.AgentClasses.Agent;
+import AI.AgentClasses.Organ;
 import AI.Element;
 import AI.Square;
 import AI.World;
@@ -20,7 +21,10 @@ public class Roll extends Action {
     public String getName() {
         return "roll";
     }
-
+public Roll(Organ a){
+            organ=a;
+            organ.addAction(this);
+    }
     @Override
     public int doAction(World world, int x, int y, int xnext, int ynext) {
         try {
