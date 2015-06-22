@@ -121,20 +121,6 @@ public class Reproduce extends Action {
                 //System.out.println(charName + " = " + 10);
                 child.setCharacteristic(charName, 5);//maybe we should average this value?
             }
-            /*Iterator it = ax.getCharacteristics().entrySet().iterator();
-             while (it.hasNext()) {
-             Map.Entry pair = (Map.Entry) it.next();
-             System.out.println(pair.getKey() + " = " + pair.getValue());
-             child.setCharacteristic((String) pair.getKey(), 10);//maybe we should average this value?
-             it.remove(); // avoids a ConcurrentModificationException
-             }
-             Iterator it2 = ay.getCharacteristics().entrySet().iterator();
-             while (it2.hasNext()) {
-             Map.Entry pair = (Map.Entry) it2.next();
-             //System.out.println(pair.getKey() + " = " + pair.getValue());
-             child.setCharacteristic((String) pair.getKey(), 10);//maybe we should average this value?
-             it2.remove(); // avoids a ConcurrentModificationException
-             }*/
             Random r = new Random(System.currentTimeMillis());
             boolean flag = false;
             boolean seen[] = new boolean[ay.getOrgans().size()];
@@ -144,14 +130,16 @@ public class Reproduce extends Action {
                         flag = true;
                         seen[j] = true;
                         if (r.nextFloat() > 0.1) {
-                           child.addOrgan(ax.getOrgans().get(i).combine(ay.getOrgans().get(j)));
+                           child.addOrgan(ax.getOrgans().get(i).copy());
+                           //child.addOrgan(ax.getOrgans().get(i).combine(ay.getOrgans().get(j)));
                         
                         }
                     }
                 }
                 if (flag == false) {
                     if (r.nextFloat() > 0.5) {
-                        child.addOrgan(ax.getOrgans().get(i).combine(null));
+                        child.addOrgan(ax.getOrgans().get(i).copy());
+                        //child.addOrgan(ax.getOrgans().get(i).combine(null));
                     }
                 } else {
                     flag = false;
@@ -159,7 +147,8 @@ public class Reproduce extends Action {
             }
             for (int i = 0; i < ay.getOrgans().size(); i++) {
                 if (seen[i] == false && r.nextFloat() > 0.5) {
-                    child.addOrgan(ay.getOrgans().get(i).combine(null));
+                    child.addOrgan(ay.getOrgans().get(i).copy());
+                    //child.addOrgan(ay.getOrgans().get(i).combine(null));
                 }
             }
             /*if (r.nextFloat() > 0.9) {

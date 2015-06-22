@@ -48,10 +48,13 @@ public class See extends Sense{
         boolean obstacle = false;
         
         // lets check inbetween the two points without considering the frontier
-        int x = agentX + slopeX;
-        int y = agentY + slopeY;
+        int x = world.toToricCoord(agentX + slopeX,0);
+        int y = world.toToricCoord(agentY + slopeY,1);
         while (x != squareX && y != squareY) {
             try {
+                /*System.out.print("See l55: pos= ");
+                System.out.print(x);
+                System.out.println(y);*/
                 if (world.getElement(x, y) != null) // there is an obstacle 
                 {
                     obstacle = true;
@@ -62,6 +65,8 @@ public class See extends Sense{
             }
             x += slopeX;
             y += slopeY;
+            x = world.toToricCoord(x,0);
+            y = world.toToricCoord(y,1);
         }
         if (!obstacle)
             try {

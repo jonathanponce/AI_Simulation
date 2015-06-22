@@ -219,6 +219,7 @@ public class Agent extends Element {
         sensedVariable = new HashMap<>(); 
        
         Action toDo = chooseActionMaxMax();
+        //Action toDo = chooseActionMinMax();
         
         //System.out.println(toDo);
         if (toDo != null) {
@@ -315,11 +316,19 @@ public class Agent extends Element {
      * @throws Exception 
      */
     private boolean isPossibleAction(int x, int y, Action a) throws Exception {
-
+        //System.out.println("agent l318: enter");
         // We first verify that this action is possible on this square.
         Iterator it = a.getCondition().entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry) it.next();
+            /*System.out.print("agent l323: ");
+            System.out.print(" (x,y)=");
+            System.out.print(x);
+            System.out.print(y);
+            System.out.print(" demandé= ");
+            System.out.print(pair.getKey());
+            System.out.print(" realité= ");
+            System.out.println(world.getElement(x, y));*/
             // if the condition is about a max distance (e.g. movement)
             if (pair.getKey().equals("distance")) {
                 continue;
@@ -345,7 +354,14 @@ public class Agent extends Element {
 
             // For the condition about an object on this square (e.g. eat).
             if (((Integer[]) (pair.getValue())).length == 1) {
-                
+                /*System.out.print("agent l348: ");
+                System.out.print(" (x,y)=");
+                System.out.print(x);
+                System.out.print(y);
+                System.out.print(" demandé= ");
+                System.out.print(pair.getKey()); 
+                System.out.print(" realité= ");
+                System.out.println(world.getElement(x, y));*/
                 if (((Integer[]) pair.getValue())[0] == 1) {
                     if (world.getElement(x, y) != null && (world.getElement(x, y).getName().equals(pair.getKey()) || pair.getKey().equals("*"))) {
                         continue;
@@ -440,7 +456,7 @@ public class Agent extends Element {
                         
                         if (this.isPossibleAction(xtarget, ytarget, currentAction)) {
                             int current = this.evaluationFunction(xtarget, ytarget, currentAction);
-                            System.out.print("first: ");
+                            /*System.out.print("first: ");
                             System.out.print(currentAction.getName());
                             System.out.print(k);
                             System.out.print(l);
@@ -449,7 +465,7 @@ public class Agent extends Element {
                             System.out.print(this.posy);
                             System.out.print("-- target= ");
                             System.out.print(xtarget);
-                            System.out.println(ytarget);
+                            System.out.println(ytarget);*/
                             int xprevious = this.posx;
                             int yprevious = this.posy;
                             if (current > -1000000) {
@@ -527,7 +543,7 @@ public class Agent extends Element {
                                 int xtarget = world.toToricCoord(this.posx + k, 0);
                                 int ytarget = world.toToricCoord(this.posy + l, 1);
                                 if (this.isPossibleAction(xtarget, ytarget, currentAction)) {
-                                    System.out.print(depthLeft);
+                                    /*System.out.print(depthLeft);
                                     System.out.print(" step: ");
                                     System.out.print(currentAction.getName());
                                     System.out.print("---- pos= ");
@@ -535,7 +551,7 @@ public class Agent extends Element {
                                     System.out.print(posy);
                                     System.out.print("-- target= ");
                                     System.out.print(xtarget);
-                                    System.out.println(ytarget);
+                                    System.out.println(ytarget);*/
                                     int xprevious = this.posx;
                                     int yprevious = this.posy;
                                     int current = this.evaluationFunction(xtarget, ytarget, currentAction);
@@ -572,6 +588,11 @@ public class Agent extends Element {
         seenAgent.put(0, this);
         int index=1;
         for (Agent newagent: world.getAgents()){
+            /*System.out.print("Agent l591:  creation of opponents list, newopponent= ");
+            System.out.print(newagent);
+            System.out.print("---- pos= ");
+            System.out.print(newagent.posx);
+            System.out.println(newagent.posy);*/
             if (newagent != this && this.senseElement(newagent.posx, newagent.posy)!=null && this.senseElement(newagent.posx, newagent.posy).isAgent()) {
                 seenAgent.put(index, newagent);
                 index++;
@@ -668,19 +689,20 @@ public class Agent extends Element {
                     for (int k = -limit; k < limit + 1; k++) {
                         for (int l = -(limit - Math.abs(k)); l < (limit - Math.abs(k)) + 1; l++) {
                             int xtarget = world.toToricCoord(currentAgent.posx + k, 0);
-                            int ytarget = world.toToricCoord(currentAgent.posx + l, 1);
-                            /*System.out.print("first: ");
-                             System.out.print(currentAction);
-                             System.out.print("-- pos= ");
-                             System.out.print(currentAgent.posx);
-                             System.out.print(currentAgent.posy);
-                             System.out.print("-- target= ");
-                             System.out.print(xtarget);
-                             System.out.println(ytarget);*/
+                            int ytarget = world.toToricCoord(currentAgent.posy + l, 1);
+                            /**/
                             if (currentAgent.isPossibleAction(xtarget, ytarget, currentAction)) {
                                 int current = currentAgent.evaluationFunction(xtarget, ytarget, currentAction);
                                 int xprevious = currentAgent.posx;
                                 int yprevious = currentAgent.posy;
+                                /*System.out.print("first: ");
+                                System.out.print(currentAction);
+                                System.out.print("-- pos= ");
+                                System.out.print(currentAgent.posx);
+                                System.out.print(currentAgent.posy);
+                                System.out.print("-- target= ");
+                                System.out.print(xtarget);
+                                System.out.println(ytarget);*/
                                 if (current > -1000000) {
                                     currentAction.doAction(world, currentAgent.posx, currentAgent.posy, xtarget, ytarget);
                                             //res.put(currentAgent, Math.max(res.get(currentAgent), current + this.chooseSolo(world, currentAgent, depthLeft - 1) / 2));
@@ -694,7 +716,6 @@ public class Agent extends Element {
                                     int add= branchresult.get(currentAgent)==null ? 0 : branchresult.get(currentAgent);
                                     current = current + add / 2;
                                     if (current > bestValue) {
-                                        
                                         bestValue = current;
                                         res.putAll(branchresult);
                                         res.put(currentAgent, current);

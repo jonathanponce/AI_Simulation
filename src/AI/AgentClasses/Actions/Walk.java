@@ -7,6 +7,7 @@ package AI.AgentClasses.Actions;
 
 import AI.AgentClasses.Action;
 import AI.AgentClasses.Agent;
+import AI.AgentClasses.Organ;
 import AI.Element;
 import AI.World;
 import java.util.ArrayList;
@@ -19,6 +20,13 @@ import java.util.logging.Logger;
 
 public class Walk extends Action {
 
+    
+    /*public Walk(Organ feet){
+        
+        this.addCondition("distance", feet.getCharacteristic("size"));
+        this.addCondition("*", zero);
+    }*/
+    
     @Override
     public String getName() {
         return "walk";

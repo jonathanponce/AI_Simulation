@@ -1,11 +1,16 @@
 package AI;
 
 import AI.AgentClasses.Agent;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
 
 /*
@@ -38,6 +43,8 @@ public class World implements Cloneable{
     private List<Main.Cfunction> WRule;
 
     private List<Agent> agents;
+    
+    private PrintWriter writer;
 
     public List<Agent> getAgents() {
         return agents;
@@ -89,6 +96,13 @@ public class World implements Cloneable{
         //canvas.setSize(jpanel.getWidth(), jpanel.getHeight());
         //jpanel.add(canvas);
         //canvas.setVisible(true);
+        try {
+            writer = new PrintWriter("Results.txt", "UTF-8");
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(World.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(World.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
 
@@ -386,8 +400,9 @@ public class World implements Cloneable{
             next();
             draw();
 
-            Thread.sleep(1000);
+            Thread.sleep(1);
         }
+        writer.close();
     }
 
     public void drawVariableDEBUG(String var) throws Exception {
@@ -484,5 +499,12 @@ public class World implements Cloneable{
         int xtarget = (this.posx + k < 0 ? this.posx + k + world.getSize()[0] : this.posx + k) % world.getSize()[0];
         int ytarget = (this.posy + l < 0 ? this.posy + l + world.getSize()[1] : this.posy + l) % world.getSize()[1];
         */
+    }
+    
+    public void writeToFile(String text) {
+        writer.print(text);
+    }
+    public void writeToFileln(String text) {
+        writer.println(text);
     }
 }

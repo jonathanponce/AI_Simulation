@@ -59,13 +59,19 @@ public class Eat extends Action {
 
     @Override
     public void cancelAction(World world, int xprevious, int yprevious, int xnext, int ynext) throws Exception{
-        System.out.print("cancelEat :");
+        /*System.out.print("cancelEat :");
         System.out.print(world.getElement(xprevious, yprevious));
         System.out.print(" = ");
         System.out.print(xnext);
-        System.out.println(ynext);
+        System.out.println(ynext);*/
         world.setElement(new Food(),xnext, ynext);
         ((Agent) world.getElement(xprevious, yprevious)).setCharacteristic("fat", ((Agent) world.getElement(xprevious, yprevious)).getCharacteristic("fat") - 10);
+    }
+    
+    @Override
+    public boolean isActionPossible(World world, int x,int y, int xnext, int ynext) throws Exception{
+        if (world.getElement(xnext, ynext) != null && world.getElement(xnext, ynext).getName().equals("food")) return true;
+        return false;
     }
 
     /*@Override

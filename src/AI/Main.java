@@ -49,7 +49,7 @@ public class Main {
     Main() throws Exception{        
         //CODE HERE
   
-        World w = new World(10,10);
+        World w = new World(100,100);
         
         w.addVariable("Friction", 1);
         w.addVariable("slope", (World world,int x,int y)->{return x+y;});
@@ -57,10 +57,10 @@ public class Main {
         //w.addVariable("light",(World world,int x,int y,long t)->{return (int)(((x+y>5+5*Math.cos(t/6))? 1 : 0)*(50-50*(Math.cos(t/6))));});
         w.addVariable("light",(World world,int x,int y,long t)->{return 80;});
         w.addRule((World world)->{System.out.println("start world!");return 0;});
-        w.addRule((World world,long t)->{System.out.println("next turn!"); if(world.getTime()==100){world.Stop();System.out.println("end turn!");}return 0;});
+        w.addRule((World world,long t)->{System.out.println("next turn!"); if(world.getTime()==10000){world.Stop();System.out.println("end turn!");}return 0;});
         //w.addRule((World world,int x,int y)->{if(x%2==0 && y%2==0){System.out.println(x); world.setElement(new Agent(w,x,y), x, y);}return 0;});//need to detive Element// need to check agents coordinates
         //w.addRule((World world,int x,int y, long t)->{world.removeElement((int)t%10, (int)t/10);return 0;});
-        /*w.addRule((World world, int x, int y, long t) -> {
+        w.addRule((World world, int x, int y, long t) -> {
 
             Element e;
             try {
@@ -75,13 +75,43 @@ public class Main {
                 int mapSize = world.getSize()[0] * world.getSize()[1];
 
                 //System.out.println(5.0/mapSize);
-                if (world.getRandom() < 5.0/mapSize){
+                if (world.getRandom() <5.0/mapSize){
                     world.setElement(new Food(), x, y);
                 }
             }
 
             return 0;
+        });
+        /*w.addRule((World world, int x, int y, long t) -> {
+            if (t==1000){
+            Element e;
+            try {
+                e = world.getElement(x, y);
+            } catch (Exception ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                return 0;
+            }
+
+            if (e == null) {
+
+                int mapSize = world.getSize()[0] * world.getSize()[1];
+
+                //System.out.println(5.0/mapSize);
+                if (world.getRandom() <0.5 /*5.0/mapSize){
+                    world.setElement(new Food(), x, y);
+                }
+            }
+            }
+            return 0;
         });*/
+        w.addRule((World world, long t) -> {
+            
+            world.writeToFile(" tour :");
+            world.writeToFile(String.valueOf(t));
+            world.writeToFile(": nb agent :");
+            world.writeToFileln(String.valueOf(world.getAgents().size()));
+            return 0;
+        });
 
         w.buildWorld();
         Integer[] zero={0};
@@ -91,12 +121,13 @@ public class Main {
         Agent.addCharacteristic("fat");
         Agent.addCharacteristic("lifePoints");
         
-        for (int numAgent=0; numAgent<2; numAgent++){
+        for (int numAgent=0; numAgent<100; numAgent++){
             float r = w.getRandom();
             int x = (int)(w.getSize()[0]*r);
             
-            Agent nouvAgent=new Agent(w,numAgent,x);
-            nouvAgent.setCharacteristic("fat", 10000);
+            //Agent nouvAgent=new Agent(w,numAgent,x);
+            Agent nouvAgent=new Agent(w,x,numAgent);
+            nouvAgent.setCharacteristic("fat", 100);
             nouvAgent.setCharacteristic("lifePoints", 10);
             
             Walk walk= new Walk();
@@ -105,7 +136,9 @@ public class Main {
             }
             
             Organ foot= new Organ("foot", walk);
-            walk.addCondition("distance", two);
+            //foot.addCharacteristic("size", 2);
+            //walk.addCondition("distance", foot.getCharacteristic("size"));
+            walk.addCondition("distance", one);
             walk.addCondition("*", zero);
             foot.addCharacteristic("size", walk.getCondition().get("distance")[0]);
 
@@ -126,21 +159,21 @@ public class Main {
             nouvAgent.addOrgan(mouth);
             nouvAgent.addOrgan(foot);
             nouvAgent.addOrgan(eyes);
-            w.setElement(nouvAgent,numAgent,x);
+            w.setElement(nouvAgent,x,numAgent);
             
         }
         
-        //w.setElement(new Food(), 1, 1);
-        w.setElement(new Food(), 3, 3);
+        /*w.setElement(new Food(), 1, 1);
+        w.setElement(new Food(), 5, 5);
         
-        /*w.setElement(new Obstacle(), 3, 3);
-        w.setElement(new Obstacle(), 4, 3);
+        w.setElement(new Obstacle(), 3, 3);
+        w.setElement(new Obstacle(), 7, 3);
         w.setElement(new Obstacle(), 5, 3);
         w.setElement(new Obstacle(), 3, 4);
-        w.setElement(new Obstacle(), 3, 5);
+        w.setElement(new Obstacle(), 3, 5);*/
         //w.setElement(new Obstacle(), 4, 4);
         
-        w.setElement(new Obstacle(), 5, 4);
+        /*w.setElement(new Obstacle(), 5, 4);
         w.setElement(new Obstacle(), 5, 5);
         w.setElement(new Obstacle(), 3, 6);
         w.setElement(new Obstacle(), 5, 6);
